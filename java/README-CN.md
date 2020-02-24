@@ -2,7 +2,7 @@
 
 ![](https://aliyunsdk-pages.alicdn.com/icons/AlibabaCloud.svg)
 
-## Alibaba Cloud CCP BaseClient for Java
+## Alibaba Cloud ROA Util for Java
 [![Latest Stable Version](https://img.shields.io/maven-central/v/com.aliyun/roa-util.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.aliyun%22%20AND%20a:%22roa-util%22)
 
 ## 安装
