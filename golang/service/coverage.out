@@ -1,0 +1,25 @@
+mode: set
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:21.45,27.22 2 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:31.2,31.11 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:27.22,30.3 2 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:35.26,37.2 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:40.29,42.2 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:45.39,47.2 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:50.34,53.2 2 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:55.32,57.2 1 0
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:59.62,60.33 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:61.2,63.18 3 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:60.33,60.54 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:66.51,68.2 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:70.51,73.40 3 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:78.2,78.15 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:81.2,81.40 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:73.40,74.18 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:74.18,76.4 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:78.15,80.3 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:84.74,87.32 2 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:92.2,99.25 4 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:105.2,111.16 6 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:87.32,88.54 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:88.54,90.4 1 1
+gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service/service.go:99.25,101.3 1 1
