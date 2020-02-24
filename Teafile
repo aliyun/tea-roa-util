@@ -4,7 +4,7 @@
 	"version": "0.0.1",
 	"main": "./roa_util.tea",
 	"releases": {
-		"go": "gitlab.alibaba-inc.com/alicloud-sdk/roa-util/golang/service:v0.0.1",
+		"go": "github.com/aliyun/tea-roa-util/golang/service:v0.0.1",
 		"ts": "@alicloud/roa-util:^0.0.1",
 		"csharp": "AlibabaCloud.ROAUtil:0.0.1",
 		"java": "com.aliyun:roa-util:0.0.1"
