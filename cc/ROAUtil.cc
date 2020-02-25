@@ -1,9 +1,11 @@
 
 #include <sstream>
 #include <list>
-#include "ROAUtil.h"
+#include <unordered_map>
 #include <openssl/hmac.h>
+#include "ROAUtil.h"
 
+using namespace std;
 using namespace ROAUtil;
 
 bool Client::is4XXor5XX(int code) {
