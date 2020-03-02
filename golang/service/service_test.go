@@ -44,3 +44,12 @@ func Test_getStringToSign(t *testing.T) {
 	str := getStringToSign(request)
 	utils.AssertEqual(t, 29, len(str))
 }
+
+func Test_DeleteSpecialKey(t *testing.T) {
+	in := map[string]interface{}{
+		"false": "ok",
+		"true":  "ok",
+	}
+	res := DeleteSpecialKey(in, "false")
+	utils.AssertEqual(t, nil, res["false"])
+}

@@ -3,3 +3,5 @@ static function is4XXor5XX(code: number): boolean;
 static function getStringToSign(request: $Request): string;
 
 static function getSignature(stringToSign: string, secret: string): string;
+
+static function deleteSpecialKey(obj: Object, key: string): Object;

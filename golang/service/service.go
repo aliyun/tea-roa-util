@@ -110,3 +110,13 @@ func getSignedStr(req *tea.Request, canonicalizedResource string) string {
 	signStr := req.Method + "\n" + accept + "\n" + contentMd5 + "\n" + contentType + "\n" + date + "\n" + canonicalizedOSSHeaders + canonicalizedResource
 	return signStr
 }
+
+func DeleteSpecialKey(obj map[string]interface{}, key string) map[string]interface{} {
+	res := make(map[string]interface{})
+	for k, v := range obj {
+		if key != k {
+			res[k] = v
+		}
+	}
+	return res
+}
