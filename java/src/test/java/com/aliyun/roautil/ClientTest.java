@@ -42,4 +42,15 @@ public class ClientTest {
                 signature);
         Assert.assertEquals("Y69tKBaO0Z1WEKuDhYnUiltV23s=", Client.getSignature(signature, "test"));
     }
+
+    @Test
+    public void deleteSpecialKeyTest() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("test", "test");
+        map.put("delete", "test");
+        Map<String, Object> result = Client.deleteSpecialKey(map, "delete");
+        Assert.assertNull(Client.deleteSpecialKey(null,null));
+        Assert.assertNull(result.get("delete"));
+        Assert.assertEquals("test", result.get("test"));
+    }
 }

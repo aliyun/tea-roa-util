@@ -1,2 +1,5 @@
+2020-03-02 Version: 0.0.2
+1. Add deleteSpecialKey method
+
 2020-02-24 Version: 0.0.1
 1. Release Version 0.0.1

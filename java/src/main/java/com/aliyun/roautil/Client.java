@@ -77,4 +77,14 @@ public class Client {
         byte[] signData = mac.doFinal(stringToSign.getBytes("UTF-8"));
         return Base64.getEncoder().encodeToString(signData);
     }
+
+    public static Map<String, Object> deleteSpecialKey(Map<String, ?> map, String key) {
+        if (null == map) {
+            return null;
+        }
+        HashMap<String, Object> result = new HashMap<>();
+        result.putAll(map);
+        result.remove(key);
+        return result;
+    }
 }
