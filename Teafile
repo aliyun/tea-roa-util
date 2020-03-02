@@ -7,7 +7,7 @@
 		"ts": "@alicloud/roa-util:^1.0.0",
 		"go": "github.com/aliyun/tea-roa-util/golang/service:v0.0.2",
 		"csharp": "AlibabaCloud.ROAUtil:0.0.1",
-		"java": "com.aliyun:roa-util:0.0.1"
+		"java": "com.aliyun:roa-util:0.0.2"
 	},
 	"java": {
 		"package": "com.aliyun.roautil"
