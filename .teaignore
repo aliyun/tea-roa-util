@@ -3,10 +3,11 @@
 .teaignore
 .libraries.json
 libraries/
-ts/
+ts
 golang
 csharp
 java
+cc
 README-CN.md
 README.md
 swift
