@@ -10,7 +10,7 @@
     "prepublishOnly": "tsc"
   },
   "author": "Jackson Tian",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@types/mocha": "^7.0.1",
     "@types/node": "^12.12.26",
