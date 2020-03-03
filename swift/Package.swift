@@ -12,7 +12,7 @@ let package = Package(
             targets: ["AlibabaCloudRoaUtils"])
     ],
     dependencies: [
-        .package(url: "https://github.com/aliyun/tea-swift.git", from: "0.2.0")
+        .package(url: "https://github.com/aliyun/tea-swift.git", from: "0.3.0")
     ],
     targets: [
         .target(
