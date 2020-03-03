@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -41,6 +42,17 @@ namespace AlibabaCloud.ROAUtil
                 signData = algorithm.ComputeHash(Encoding.UTF8.GetBytes(stringToSign.ToCharArray()));
             }
             return Convert.ToBase64String(signData);
+        }
+
+        public static Dictionary<string, object> DeleteSpecialKey(IDictionary obj, string key)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+            Dictionary<string, object> dictObj = obj.Keys.Cast<string>().ToDictionary(k => k, k => obj[k]);
+            dictObj.Remove(key);
+            return dictObj;
         }
 
         internal static string GetCanonicalizedHeaders(Dictionary<String, String> headers)

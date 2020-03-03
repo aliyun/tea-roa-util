@@ -47,5 +47,19 @@ namespace tests
             Assert.NotNull(Common.GetStringToSign(teaRequest));
             Assert.NotNull(Common.GetSignature(Common.GetStringToSign(teaRequest), "accessKeySecret"));
         }
+
+        [Fact]
+        public void Test_DeleteSpecialKey()
+        {
+            Assert.Null(Common.DeleteSpecialKey(null, null));
+
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            dict.Add("test", "testVal");
+            dict.Add("delete", "deleteValue");
+            Dictionary<string, object> result = Common.DeleteSpecialKey(dict, "delete");
+            Assert.NotNull(result);
+            Assert.False(result.ContainsKey("delete"));
+            Assert.True(result.ContainsKey("test"));
+        }
     }
 }
