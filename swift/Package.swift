@@ -19,6 +19,6 @@ let package = Package(
             dependencies: ["Tea"]),
         .testTarget(
             name: "AlibabaCloudRoaUtilsTests",
-            dependencies: ["Tea"])
+            dependencies: ["AlibabaCloudRoaUtils", "Tea"])
     ]
 )
