@@ -37,9 +37,8 @@ public class AlibabaCloudRoaUtils {
         if (query.count <= 0) {
             return pathname;
         }
-        let queryStringify = TeaUtils.stringifyMapValue(query)
         var keys: [String] = [String]();
-        for (key, _) in queryStringify {
+        for (key, _) in query {
             keys.append(key);
         }
         keys.sort();
@@ -47,7 +46,7 @@ public class AlibabaCloudRoaUtils {
         for key in keys {
             result.append(key);
             result.append("=");
-            result.append(queryStringify[key] as! String);
+            result.append("\(query[key] ?? "")");
         }
         return result;
     }
@@ -76,5 +75,15 @@ public class AlibabaCloudRoaUtils {
     static func getSignature(_ strToSign: String, _ secret: String) -> String {
         let r: [UInt8] = try! HMAC(key: secret, variant: .sha1).authenticate(strToSign.bytes)
         return r.toBase64() ?? "";
+    }
+
+    static func deleteSpecialKey(_ dict: [String: Any], _ key: String) -> [String: Any] {
+        var res: [String: Any] = [String: Any]()
+        for (k, v) in dict {
+            if key != k {
+                res[k] = v
+            }
+        }
+        return res
     }
 }

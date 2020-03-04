@@ -63,7 +63,24 @@ final class AlibabaCloudRoaUtilsTests: XCTestCase {
     func testGetSignature() {
         let strToSign = AlibabaCloudRoaUtils.getStringToSign(request)
         XCTAssertEqual("yRemXCsUeqd7gB+7UXZATv7pugQ=", AlibabaCloudRoaUtils.getSignature(strToSign, "secret"))
+    }
 
+    func testDeleteSpecialKey() {
+        let source: [String: String] = [
+            "foo": "bar",
+            "delete": "for delete"
+        ]
+        let target: [String: String] = [
+            "foo": "bar"
+        ]
+
+        let res: [String: String] = AlibabaCloudRoaUtils.deleteSpecialKey(source, "delete") as! [String: String]
+
+        XCTAssertEqual(target, res)
+        XCTAssertEqual([
+            "foo": "bar",
+            "delete": "for delete"
+        ], source)
     }
 
     static var allTests = [
