@@ -9,6 +9,15 @@ function upload_codecov_report {
   return $?
 }
 
+function run_php {
+  cd php/ || return 126
+  composer --version
+  composer install -vvv
+  composer test
+  cd ../
+  upload_codecov_report php php
+}
+
 function run_swift {
   cd swift/ || rerturn 126
   swift package generate-xcodeproj --enable-code-coverage
@@ -83,6 +92,10 @@ if [ "$lang" == "swift" ]
 then
   echo "run swift"
   run_swift
+elif [ "$lang" == "php" ]
+then
+  echo "run php"
+  run_php
 elif [ "$lang" == "csharp" ]
 then
   echo "run csharp"
