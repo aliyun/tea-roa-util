@@ -1,38 +1,40 @@
 <?php
 
-namespace AlibabaCloud\Tea\RoaUtils;
+namespace AlibabaCloud\Tea;
 
-use AlibabaCloud\Tea\Request;
+use Adbar\Dot;
 
-class Client
+class RoaUtils
 {
     public static function filter($str)
     {
-        return str_replace(["\t", "\n", "\r", "\f"], "", $str);
+        return str_replace(["\t", "\n", "\r", "\f"], '', $str);
     }
 
-    public static function getCanonicalizedHeaders($headers, $prefix = "x-acs-")
+    public static function getCanonicalizedHeaders($headers, $prefix = 'x-acs-')
     {
         ksort($headers);
         $tmp = [];
         foreach ($headers as $k => $v) {
             if (false !== strpos($k, $prefix)) {
-                array_push($tmp, $k . ":" . trim($v));
+                array_push($tmp, $k . ':' . trim($v));
             }
         }
+
         return implode("\n", $tmp);
     }
 
     public static function getCanonicalizedResource($pathname, $query)
     {
-        if (count($query) === 0) {
+        if (0 === \count($query)) {
             return $pathname;
         }
-        $result = $pathname . "?";
+        $result = $pathname . '?';
         ksort($query);
         foreach ($query as $k => $v) {
-            $result = $result . $k . "=" . $v;
+            $result = $result . $k . '=' . $v;
         }
+
         return $result;
     }
 
@@ -48,21 +50,22 @@ class Client
      */
     public static function getStringToSign($request)
     {
-        $pathname = $request->pathname ? $request->pathname : "";
-        $headers  = $request->headers ? $request->headers : [];
+        $pathname = $request->pathname ? $request->pathname : '';
+        $headers  = new Dot($request->headers);
         $query    = $request->query ? $request->query : [];
 
         $headerValue = [
             $request->method,
-            self::readArray($headers, "accept"),
-            self::readArray($headers, "content-md5"),
-            self::readArray($headers, "content-type"),
-            self::readArray($headers, "date")
+            $headers->get('accept', ''),
+            $headers->get('content-md5', ''),
+            $headers->get('content-type', ''),
+            $headers->get('date', ''),
         ];
+
         return implode("\n", [
             implode("\n", $headerValue),
-            self::getCanonicalizedHeaders($headers),
-            self::getCanonicalizedResource($pathname, $query)
+            self::getCanonicalizedHeaders($headers->get()),
+            self::getCanonicalizedResource($pathname, $query),
         ]);
     }
 
@@ -79,11 +82,7 @@ class Client
                 $res[$k] = $v;
             }
         }
-        return $res;
-    }
 
-    private static function readArray($array, $key, $default = "")
-    {
-        return null !== $array && !empty($array) && isset($array[$key]) ? $array[$key] : $default;
+        return $res;
     }
 }

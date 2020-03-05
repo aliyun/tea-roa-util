@@ -10,6 +10,7 @@
     }
   ],
   "require": {
+    "adbario/php-dot-notation": "^2.2",
     "alibabacloud/tea": "^3.0"
   },
   "require-dev": {
@@ -17,12 +18,12 @@
   },
   "autoload": {
     "psr-4": {
-      "AlibabaCloud\\Tea\\RoaUtils\\": "src"
+      "AlibabaCloud\\Tea\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "AlibabaCloud\\Tea\\RoaUtils\\Tests\\": "tests"
+      "AlibabaCloud\\Tea\\Tests\\": "tests"
     }
   },
   "scripts": {
