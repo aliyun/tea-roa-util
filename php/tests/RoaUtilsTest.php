@@ -39,10 +39,10 @@ class RoaUtilsTest extends TestCase
     {
         $str = "a\t\n\r\fb";
         $res = RoaUtils::filter($str);
-        $this->assertFalse(strpos("\t", $res));
-        $this->assertFalse(strpos("\n", $res));
-        $this->assertFalse(strpos("\r", $res));
-        $this->assertFalse(strpos("\f", $res));
+        $this->assertFalse(strpos($res, "\t"));
+        $this->assertFalse(strpos($res, "\n"));
+        $this->assertFalse(strpos($res, "\r"));
+        $this->assertFalse(strpos($res, "\f"));
     }
 
     public function testGetCanonicalizedHeaders()
