@@ -1,9 +1,9 @@
 <?php
 
-namespace AlibabaCloud\Tea\Tests;
+namespace AlibabaCloud\Tea\RoaUtils\Tests;
 
 use AlibabaCloud\Tea\Request;
-use AlibabaCloud\Tea\RoaUtils;
+use AlibabaCloud\Tea\RoaUtils\RoaUtils;
 use PHPUnit\Framework\TestCase;
 
 /**
