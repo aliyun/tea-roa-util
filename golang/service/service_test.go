@@ -42,7 +42,7 @@ func Test_getStringToSign(t *testing.T) {
 		"x-acs-meta": "user",
 	}
 	str := getStringToSign(request)
-	utils.AssertEqual(t, 29, len(str))
+	utils.AssertEqual(t, 28, len(str))
 }
 
 func Test_DeleteSpecialKey(t *testing.T) {
