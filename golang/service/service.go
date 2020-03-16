@@ -71,11 +71,10 @@ func getStringToSign(request *tea.Request) string {
 	resource := request.Pathname
 	tmp := ""
 	for key, value := range request.Query {
-		if value != "" {
-			tmp = tmp + "&" + key + "=" + value
-		}
+		tmp = tmp + "&" + key + "=" + value
 	}
 	if tmp != "" {
+		tmp = strings.TrimLeft(tmp, "&")
 		resource = resource + "?" + tmp
 	}
 	return getSignedStr(request, resource)

@@ -2,7 +2,7 @@
 .gitignore
 .teaignore
 .libraries.json
-libraries/
+libraries
 ts
 golang
 csharp
