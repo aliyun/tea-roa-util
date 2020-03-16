@@ -52,10 +52,6 @@ func (hs *Sorter) Swap(i, j int) {
 	hs.Keys[i], hs.Keys[j] = hs.Keys[j], hs.Keys[i]
 }
 
-func Is4XXor5XX(code int) bool {
-	return code >= 400 && code < 600
-}
-
 func GetSignature(stringToSign string, secret string) string {
 	h := hmac.New(func() hash.Hash { return sha1.New() }, []byte(secret))
 	io.WriteString(h, stringToSign)
@@ -108,14 +104,4 @@ func getSignedStr(req *tea.Request, canonicalizedResource string) string {
 
 	signStr := req.Method + "\n" + accept + "\n" + contentMd5 + "\n" + contentType + "\n" + date + "\n" + canonicalizedOSSHeaders + canonicalizedResource
 	return signStr
-}
-
-func DeleteSpecialKey(obj map[string]interface{}, key string) map[string]interface{} {
-	res := make(map[string]interface{})
-	for k, v := range obj {
-		if key != k {
-			res[k] = v
-		}
-	}
-	return res
 }
