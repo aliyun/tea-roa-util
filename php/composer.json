@@ -1,6 +1,6 @@
 {
   "name": "alibabacloud/tea-roa-utils",
-  "description": "Alibaba Cloud ROA Util SDK for PHP",
+  "description": "Alibaba Cloud ROA Utils SDK for PHP",
   "type": "library",
   "license": "Apache-2.0",
   "authors": [
