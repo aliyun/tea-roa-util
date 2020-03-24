@@ -63,6 +63,26 @@ func GetStringToSign(request *tea.Request) string {
 	return getStringToSign(request)
 }
 
+func GetValueFromMap(source map[string]interface{}, key string) interface{} {
+	value := source[key]
+	if value != nil {
+		return value
+	}
+	value = source[strFirstToLowerCase(key)]
+	return value
+}
+
+func strFirstToLowerCase(str string) string {
+	if len(str) < 1 {
+		return ""
+	}
+	strArry := []rune(str)
+	if strArry[0] >= 65 && strArry[0] <= 90 {
+		strArry[0] += 32
+	}
+	return string(strArry)
+}
+
 func getStringToSign(request *tea.Request) string {
 	resource := request.Pathname
 	tmp := ""

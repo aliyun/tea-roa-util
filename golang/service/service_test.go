@@ -33,6 +33,22 @@ func Test_Sorter(t *testing.T) {
 	utils.AssertEqual(t, isLess, false)
 }
 
+func Test_GetValueFromMap(t *testing.T) {
+	source := map[string]interface{}{
+		"code": "200",
+	}
+	value := GetValueFromMap(source, "Code")
+	utils.AssertNotNil(t, value)
+	utils.AssertEqual(t, "200", value.(string))
+
+	value = GetValueFromMap(source, "code")
+	utils.AssertNotNil(t, value)
+	utils.AssertEqual(t, "200", value.(string))
+
+	value = GetValueFromMap(source, "")
+	utils.AssertNil(t, value)
+}
+
 func Test_getStringToSign(t *testing.T) {
 	request := tea.NewRequest()
 	request.Query = map[string]string{
