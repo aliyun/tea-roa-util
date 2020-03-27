@@ -21,6 +21,8 @@ java/*.iml
 *.sum
 .libraries.json
 libraries/
+.DS_Store
+coverage.html
 
 /csharp/**/bin/
 /csharp/**/obj/
