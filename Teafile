@@ -1,14 +1,14 @@
 {
 	"scope": "alibabacloud",
 	"name": "ROAUtil",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"main": "./roa_util.tea",
 	"releases": {
 		"ts": "@alicloud/roa-util:^1.0.0",
 		"go": "github.com/aliyun/tea-roa-util/golang/service:v0.0.2",
 		"csharp": "AlibabaCloud.ROAUtil:0.0.2",
 		"java": "com.aliyun:roa-util:0.0.2",
-		"php": "alibabacloud/tea-roa-utils^0.2.0"
+		"php": "alibabacloud/tea-roa-utils:^0.1.1"
 	},
 	"java": {
 		"package": "com.aliyun.roautil"
