@@ -65,9 +65,17 @@ func GetStringToSign(request *tea.Request) string {
 
 func getStringToSign(request *tea.Request) string {
 	resource := request.Pathname
+	queryParams := request.Query
+	// sort QueryParams by key
+	var queryKeys []string
+	for key := range queryParams {
+		queryKeys = append(queryKeys, key)
+	}
+	sort.Strings(queryKeys)
 	tmp := ""
-	for key, value := range request.Query {
-		tmp = tmp + "&" + key + "=" + value
+	for i := 0; i < len(queryKeys); i++ {
+		queryKey := queryKeys[i]
+		tmp = tmp + "&" + queryKey + "=" + queryParams[queryKey]
 	}
 	if tmp != "" {
 		tmp = strings.TrimLeft(tmp, "&")
