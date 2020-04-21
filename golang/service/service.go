@@ -52,19 +52,19 @@ func (hs *Sorter) Swap(i, j int) {
 	hs.Keys[i], hs.Keys[j] = hs.Keys[j], hs.Keys[i]
 }
 
-func GetSignature(stringToSign string, secret string) string {
-	h := hmac.New(func() hash.Hash { return sha1.New() }, []byte(secret))
-	io.WriteString(h, stringToSign)
+func GetSignature(stringToSign *string, secret *string) *string {
+	h := hmac.New(func() hash.Hash { return sha1.New() }, []byte(tea.StringValue(secret)))
+	io.WriteString(h, tea.StringValue(stringToSign))
 	signedStr := base64.StdEncoding.EncodeToString(h.Sum(nil))
-	return signedStr
+	return tea.String(signedStr)
 }
 
-func GetStringToSign(request *tea.Request) string {
-	return getStringToSign(request)
+func GetStringToSign(request *tea.Request) *string {
+	return tea.String(getStringToSign(request))
 }
 
 func getStringToSign(request *tea.Request) string {
-	resource := request.Pathname
+	resource := tea.StringValue(request.Pathname)
 	queryParams := request.Query
 	// sort QueryParams by key
 	var queryKeys []string
@@ -110,6 +110,6 @@ func getSignedStr(req *tea.Request, canonicalizedResource string) string {
 	contentType := req.Headers["content-type"]
 	contentMd5 := req.Headers["content-md5"]
 
-	signStr := req.Method + "\n" + accept + "\n" + contentMd5 + "\n" + contentType + "\n" + date + "\n" + canonicalizedOSSHeaders + canonicalizedResource
+	signStr := tea.StringValue(req.Method) + "\n" + accept + "\n" + contentMd5 + "\n" + contentType + "\n" + date + "\n" + canonicalizedOSSHeaders + canonicalizedResource
 	return signStr
 }

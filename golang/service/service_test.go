@@ -10,8 +10,8 @@ import (
 func Test_GetSignature(t *testing.T) {
 	request := tea.NewRequest()
 	sign := GetStringToSign(request)
-	signature := GetSignature(sign, "secret")
-	utils.AssertEqual(t, 28, len(signature))
+	signature := GetSignature(sign, tea.String("secret"))
+	utils.AssertEqual(t, 28, len(tea.StringValue(signature)))
 }
 
 func Test_Sorter(t *testing.T) {
