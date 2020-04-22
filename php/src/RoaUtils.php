@@ -3,6 +3,7 @@
 namespace AlibabaCloud\Tea\RoaUtils;
 
 use Adbar\Dot;
+use AlibabaCloud\Tea\Request;
 
 class RoaUtils
 {
@@ -14,14 +15,14 @@ class RoaUtils
     public static function getCanonicalizedHeaders($headers, $prefix = 'x-acs-')
     {
         ksort($headers);
-        $tmp = [];
+        $str = '';
         foreach ($headers as $k => $v) {
-            if (false !== strpos($k, $prefix)) {
-                array_push($tmp, $k . ':' . trim($v));
+            if (0 === strpos(strtolower($k), $prefix)) {
+                $str .= $k . ':' . trim(self::filter($v)) . "\n";
             }
         }
 
-        return implode("\n", $tmp);
+        return $str;
     }
 
     public static function getCanonicalizedResource($pathname, $query)
@@ -29,13 +30,13 @@ class RoaUtils
         if (0 === \count($query)) {
             return $pathname;
         }
-        $result = $pathname . '?';
         ksort($query);
+        $tmp = [];
         foreach ($query as $k => $v) {
-            $result = $result . $k . '=' . $v;
+            array_push($tmp, $k . '=' . $v);
         }
 
-        return $result;
+        return $pathname . '?' . implode('&', $tmp);
     }
 
     public static function is4XXor5XX($code)
@@ -54,19 +55,16 @@ class RoaUtils
         $headers  = new Dot($request->headers);
         $query    = $request->query ? $request->query : [];
 
-        $headerValue = [
-            $request->method,
-            $headers->get('accept', ''),
-            $headers->get('content-md5', ''),
-            $headers->get('content-type', ''),
-            $headers->get('date', ''),
-        ];
+        $result = $request->method . "\n" .
+            $headers->get('accept', '') . "\n" .
+            $headers->get('content-md5', '') . "\n" .
+            $headers->get('content-type', '') . "\n" .
+            $headers->get('date', '') . "\n";
 
-        return implode("\n", [
-            implode("\n", $headerValue),
-            self::getCanonicalizedHeaders($headers->get()),
-            self::getCanonicalizedResource($pathname, $query),
-        ]);
+        $canonicalizedHeaders  = self::getCanonicalizedHeaders($headers->get());
+        $canonicalizedResource = self::getCanonicalizedResource($pathname, $query);
+
+        return $result . $canonicalizedHeaders . $canonicalizedResource;
     }
 
     public static function getSignature($strToSign, $secret)
