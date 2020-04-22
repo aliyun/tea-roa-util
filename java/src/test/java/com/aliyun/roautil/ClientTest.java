@@ -23,8 +23,8 @@ public class ClientTest {
     public void getSignatureTest() throws Exception {
         TeaRequest request = new TeaRequest();
         String signature = Client.getStringToSign(request);
-        Assert.assertEquals("GET\n\n\n\n\n\nnull", signature);
-        Assert.assertEquals("hD/QuFdv131xEuE0McZ/8dZi6ZQ=", Client.getSignature(signature, "test"));
+        Assert.assertEquals("GET\n\n\n\n\nnull", signature);
+        Assert.assertEquals("RhNhDHvBaWVHInTaWtSYFAUQ3HU=", Client.getSignature(signature, "test"));
 
         Map<String, String> requestMap = new HashMap<>();
         requestMap.put("x-acs-security-token", "test");
@@ -38,9 +38,9 @@ public class ClientTest {
         request.pathname = "/test";
         signature = Client.getStringToSign(request);
         Assert.assertEquals("GET\naccept\ncontent-md5\ncontent-type\ndate\nx-acs-security-test:test\nx-acs-security-token:test\n" +
-                        "/test?date=datex-acs-security-token=testx-acs-security-test=testcontent-md5=content-md5content-type=content-typeaccept=accept",
+                        "/test?date=date&x-acs-security-token=test&x-acs-security-test=test&content-md5=content-md5&content-type=content-type&accept=accept",
                 signature);
-        Assert.assertEquals("Y69tKBaO0Z1WEKuDhYnUiltV23s=", Client.getSignature(signature, "test"));
+        Assert.assertEquals("SsWK5BHjFUe3pquMl4/gGJYhNzU=", Client.getSignature(signature, "test"));
     }
 
     @Test

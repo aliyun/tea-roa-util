@@ -23,10 +23,10 @@ public class Client {
         String contentMD5 = headers.get("content-md5") == null ? "" : headers.get("content-md5");
         String contentType = headers.get("content-type") == null ? "" : headers.get("content-type");
         String date = headers.get("date") == null ? "" : headers.get("date");
-        String header = method + "\n" + accept + "\n" + contentMD5 + "\n" + contentType + "\n" + date;
+        String header = method + "\n" + accept + "\n" + contentMD5 + "\n" + contentType + "\n" + date + "\n";
         String canonicalizedHeaders = getCanonicalizedHeaders(headers);
         String canonicalizedResource = getCanonicalizedResource(pathname, query);
-        String stringToSign = header + "\n" + canonicalizedHeaders + "\n" + canonicalizedResource;
+        String stringToSign = header + canonicalizedHeaders + canonicalizedResource;
         return stringToSign;
     }
 
@@ -43,13 +43,11 @@ public class Client {
         Arrays.sort(canonicalizedKeysArray);
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < canonicalizedKeysArray.length; i++) {
-            if (i > 0) {
-                result.append("\n");
-            }
             String key = canonicalizedKeysArray[i];
             result.append(key);
             result.append(":");
             result.append(headers.get(key).trim());
+            result.append("\n");
         }
         return result.toString();
     }
@@ -67,8 +65,9 @@ public class Client {
             result.append(key);
             result.append("=");
             result.append(query.get(key));
+            result.append("&");
         }
-        return result.toString();
+        return result.deleteCharAt(result.length() - 1).toString();
     }
 
     public static String getSignature(String stringToSign, String secret) throws Exception {
