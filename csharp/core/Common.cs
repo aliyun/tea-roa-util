@@ -26,10 +26,10 @@ namespace AlibabaCloud.ROAUtil
             string contentMD5 = headers.ContainsKey("content-md5") ? headers["content-md5"] : "";
             string contentType = headers.ContainsKey("content-type") ? headers["content-type"] : "";
             string date = headers.ContainsKey("date") ? headers["date"] : "";
-            string header = method + "\n" + accept + "\n" + contentMD5 + "\n" + contentType + "\n" + date;
+            string header = method + "\n" + accept + "\n" + contentMD5 + "\n" + contentType + "\n" + date + "\n";
             string canonicalizedHeaders = GetCanonicalizedHeaders(headers);
             string canonicalizedResource = GetCanonicalizedResource(pathname, query);
-            string stringToSign = header + "\n" + canonicalizedHeaders + "\n" + canonicalizedResource;
+            string stringToSign = header + canonicalizedHeaders + canonicalizedResource;
             return stringToSign;
         }
 
@@ -65,14 +65,12 @@ namespace AlibabaCloud.ROAUtil
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < canonicalizedKeys.Count; i++)
             {
-                if (i > 0)
-                {
-                    result.Append("\n");
-                }
+                
                 String key = canonicalizedKeys[i];
                 result.Append(key);
                 result.Append(":");
                 result.Append(headers[key].Trim());
+                result.Append("\n");
             }
             return result.ToString();
         }
@@ -84,17 +82,15 @@ namespace AlibabaCloud.ROAUtil
                 return pathname;
             }
             List<string> keys = query.Keys.ToList();
-            StringBuilder result = new StringBuilder(pathname);
-            result.Append("?");
-            String key;
+            keys.Sort();
+            string key;
+            List<string> result = new List<string>();
             for (int i = 0; i < keys.Count; i++)
             {
                 key = keys[i];
-                result.Append(key);
-                result.Append("=");
-                result.Append(query[key]);
+                result.Add(key + "=" + query[key]);
             }
-            return result.ToString();
+            return pathname + "?" + string.Join("&", result);
         }
     }
 }

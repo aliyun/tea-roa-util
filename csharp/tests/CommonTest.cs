@@ -19,7 +19,7 @@ namespace tests
         }
 
         [Fact]
-        public void TestGetSignature()
+        public void Test_GetStringToSign()
         {
             TeaRequest teaRequestEmpty = new TeaRequest();
             teaRequestEmpty.Method = "GET";
@@ -33,19 +33,30 @@ namespace tests
 
             TeaRequest teaRequest = new TeaRequest();
             teaRequest.Method = "GET";
-            teaRequest.Pathname = "Pathname";
+            teaRequest.Pathname = "/";
             Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add("headerKey", "headerValue");
-            headers.Add("accept", "accept");
-            headers.Add("content-md5", "content-md5");
-            headers.Add("content-type", "content-type");
-            headers.Add("date", "date");
+            headers.Add("accept", "application/json");
             teaRequest.Headers = headers;
-            Dictionary<string, string> querys = new Dictionary<string, string>();
-            querys.Add("queryKey", "queryValue");
-            teaRequest.Query = querys;
-            Assert.NotNull(Common.GetStringToSign(teaRequest));
-            Assert.NotNull(Common.GetSignature(Common.GetStringToSign(teaRequest), "accessKeySecret"));
+            Assert.Equal("GET\napplication/json\n\n\n\n/", Common.GetStringToSign(teaRequest));
+
+            teaRequest.Headers.Add("content-md5", "md5");
+            teaRequest.Headers.Add("content-type", "application/json");
+            teaRequest.Headers.Add("date", "date");
+            Assert.Equal("GET\napplication/json\nmd5\napplication/json\ndate\n/", Common.GetStringToSign(teaRequest));
+
+            teaRequest.Headers.Add("x-acs-custom-key", "any value");
+            Assert.Equal("GET\napplication/json\nmd5\napplication/json\ndate\nx-acs-custom-key:any value\n/", Common.GetStringToSign(teaRequest));
+
+            Dictionary<string, string> query = new Dictionary<string, string>();
+            query.Add("key", "val ue with space");
+            teaRequest.Query = query;
+            Assert.Equal("GET\napplication/json\nmd5\napplication/json\ndate\nx-acs-custom-key:any value\n/?key=val ue with space", Common.GetStringToSign(teaRequest));
+        }
+
+        [Fact]
+        public void Test_GetSignature()
+        {
+            Assert.Equal("OmuTAr79tpI6CRoAdmzKRq5lHs0=", Common.GetSignature("stringtosign", "secret"));
         }
 
         [Fact]
