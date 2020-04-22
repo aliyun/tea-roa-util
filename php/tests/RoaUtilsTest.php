@@ -52,7 +52,7 @@ class RoaUtilsTest extends TestCase
             'x-acs-foo' => 'bar',
             'x-acs-bar' => 'foo',
         ];
-        $this->assertEquals("x-acs-bar:foo\nx-acs-foo:bar", RoaUtils::getCanonicalizedHeaders($headers));
+        $this->assertEquals("x-acs-bar:foo\nx-acs-foo:bar\n", RoaUtils::getCanonicalizedHeaders($headers));
     }
 
     public function testGetCanonicalizedResource()
@@ -63,7 +63,7 @@ class RoaUtilsTest extends TestCase
             'number' => 123,
             'empty'  => '',
         ];
-        $this->assertEquals('/pathname?empty=foo=barnumber=123', RoaUtils::getCanonicalizedResource($pathname, $query));
+        $this->assertEquals('/pathname?empty=&foo=bar&number=123', RoaUtils::getCanonicalizedResource($pathname, $query));
     }
 
     public function testIs4XXor5XX()
@@ -74,16 +74,39 @@ class RoaUtilsTest extends TestCase
 
     public function testGetStringToSign()
     {
-        $this->assertEquals(
-            "GET\napplication/json\n\napplication/text\n2020-02-24T02:23:06Z\nx-acs-bar:foo\nx-acs-foo:bar\n/pathname?foo=barnumber=123",
-            RoaUtils:: getStringToSign($this->request)
-        );
+        $request                    = new Request();
+        $request->method            = 'GET';
+        $request->pathname          = '/';
+        $request->headers['accept'] = 'application/json';
+
+        $this->assertEquals("GET\napplication/json\n\n\n\n/", RoaUtils::getStringToSign($request));
+
+        $request->headers = [
+            'accept'       => 'application/json',
+            'content-md5'  => 'md5',
+            'content-type' => 'application/json',
+            'date'         => 'date',
+        ];
+        $this->assertEquals("GET\napplication/json\nmd5\napplication/json\ndate\n/", RoaUtils::getStringToSign($request));
+
+        $request->headers = [
+            'accept'           => 'application/json',
+            'content-md5'      => 'md5',
+            'content-type'     => 'application/json',
+            'date'             => 'date',
+            'x-acs-custom-key' => 'any value',
+        ];
+        $this->assertEquals("GET\napplication/json\nmd5\napplication/json\ndate\nx-acs-custom-key:any value\n/", RoaUtils::getStringToSign($request));
+
+        $request->query = [
+            'key' => 'val ue with space',
+        ];
+        $this->assertEquals("GET\napplication/json\nmd5\napplication/json\ndate\nx-acs-custom-key:any value\n/?key=val ue with space", RoaUtils::getStringToSign($request));
     }
 
     public function testGetSignature()
     {
-        $strToSign = RoaUtils::getStringToSign($this->request);
-        $this->assertEquals('yRemXCsUeqd7gB+7UXZATv7pugQ=', RoaUtils::getSignature($strToSign, 'secret'));
+        $this->assertEquals('OmuTAr79tpI6CRoAdmzKRq5lHs0=', RoaUtils::getSignature('stringtosign', 'secret'));
     }
 
     public function testDeleteSpecialKey()
