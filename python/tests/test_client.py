@@ -6,6 +6,25 @@ from roa_util import client
 class TestClient(unittest.TestCase):
     def test_get_str_to_sign(self):
         request = TeaRequest()
+        str_to_sign = client.get_str_to_sign(request)
+        self.assertEqual('GET\n\n\n\n\n', str_to_sign)
+
+        request = TeaRequest()
+        request.method = "POST"
+        request.query = {
+            'test': 'tests'
+        }
+        str_to_sign = client.get_str_to_sign(request)
+        self.assertEqual('POST\n\n\n\n\n?test=tests', str_to_sign)
+
+        request = TeaRequest()
+        request.headers = {
+            'content-md5': 'md5',
+        }
+        str_to_sign = client.get_str_to_sign(request)
+        self.assertEqual('GET\n\nmd5\n\n\n', str_to_sign)
+
+        request = TeaRequest()
         request.pathname = "Pathname"
         request.query = {
             'ccp': 'ok',
