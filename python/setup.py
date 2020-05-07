@@ -24,7 +24,7 @@ Created on 4/02/2020
 @author: Alibaba Cloud
 """
 
-PACKAGE = "roa_util"
+PACKAGE = "alibabacloudroautil"
 DESCRIPTION = "The roa-util module of alibabaCloud Python SDK."
 AUTHOR = "Alibaba Cloud"
 AUTHOR_EMAIL = "alibaba-cloud-sdk-dev-team@list.alibaba-inc.com"
@@ -62,4 +62,4 @@ setup_args = {
     )
 }
 
-setup(name='alibabacloud-tea-roa-util', **setup_args)
+setup(name='alibabacloudroautil', **setup_args)
