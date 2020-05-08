@@ -13,7 +13,7 @@
 
 ```bash
 # 安装 tea-roa-util
-pip install alibabacloud-tea-roa-util
+pip install alibabacloud_roa_util
 ```
 
 ## 问题

@@ -19,12 +19,12 @@ import os
 from setuptools import setup, find_packages
 
 """
-Setup module for endpoint-util.
+Setup module for roa-util.
 Created on 4/02/2020
 @author: Alibaba Cloud
 """
 
-PACKAGE = "alibabacloudroautil"
+PACKAGE = "alibabacloud_roa_util"
 DESCRIPTION = "The roa-util module of alibabaCloud Python SDK."
 AUTHOR = "Alibaba Cloud"
 AUTHOR_EMAIL = "alibaba-cloud-sdk-dev-team@list.alibaba-inc.com"
@@ -62,4 +62,4 @@ setup_args = {
     )
 }
 
-setup(name='alibabacloudroautil', **setup_args)
+setup(name='alibabacloud_roa_util', **setup_args)

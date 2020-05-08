@@ -1,6 +1,6 @@
 import unittest
 from Tea.request import TeaRequest
-from alibabacloudroautil import client
+from alibabacloud_roa_util import client
 
 
 class TestClient(unittest.TestCase):
