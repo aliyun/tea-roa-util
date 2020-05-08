@@ -9,6 +9,8 @@ jobs:
       env: TEA_UTIL_ENV="java"
     - language: go
       go: 1.12.x
+      install: 
+        - export GO111MODULE=on
       env: TEA_UTIL_ENV="go"
     - language: node_js
       node_js: 12
