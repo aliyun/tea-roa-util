@@ -5,7 +5,7 @@
 	"main": "./roa_util.tea",
 	"releases": {
 		"ts": "@alicloud/roa-util:^1.0.0",
-		"go": "github.com/alibabacloud-go/tea-roa-utils/service:v1.0.1",
+		"go": "github.com/alibabacloud-go/tea-roa-utils/service:v1.0.2",
 		"csharp": "AlibabaCloud.ROAUtil:0.0.3",
 		"java": "com.aliyun:roa-util:0.0.3",
 		"php": "alibabacloud/tea-roa-utils:^0.1.1",
