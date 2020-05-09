@@ -75,7 +75,7 @@ func getStringToSign(request *tea.Request) string {
 	tmp := ""
 	for i := 0; i < len(queryKeys); i++ {
 		queryKey := queryKeys[i]
-		tmp = tmp + "&" + queryKey + "=" + queryParams[queryKey]
+		tmp = tmp + "&" + queryKey + "=" + tea.StringValue(queryParams[queryKey])
 	}
 	if tmp != "" {
 		tmp = strings.TrimLeft(tmp, "&")
@@ -89,7 +89,7 @@ func getSignedStr(req *tea.Request, canonicalizedResource string) string {
 
 	for k, v := range req.Headers {
 		if strings.HasPrefix(strings.ToLower(k), "x-acs-") {
-			temp[strings.ToLower(k)] = v
+			temp[strings.ToLower(k)] = tea.StringValue(v)
 		}
 	}
 	hs := newSorter(temp)
@@ -105,10 +105,10 @@ func getSignedStr(req *tea.Request, canonicalizedResource string) string {
 
 	// Give other parameters values
 	// when sign URL, date is expires
-	date := req.Headers["date"]
-	accept := req.Headers["accept"]
-	contentType := req.Headers["content-type"]
-	contentMd5 := req.Headers["content-md5"]
+	date := tea.StringValue(req.Headers["date"])
+	accept := tea.StringValue(req.Headers["accept"])
+	contentType := tea.StringValue(req.Headers["content-type"])
+	contentMd5 := tea.StringValue(req.Headers["content-md5"])
 
 	signStr := tea.StringValue(req.Method) + "\n" + accept + "\n" + contentMd5 + "\n" + contentType + "\n" + date + "\n" + canonicalizedOSSHeaders + canonicalizedResource
 	return signStr
