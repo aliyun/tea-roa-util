@@ -35,11 +35,11 @@ func Test_Sorter(t *testing.T) {
 
 func Test_getStringToSign(t *testing.T) {
 	request := tea.NewRequest()
-	request.Query = map[string]string{
-		"ccp": "ok",
+	request.Query = map[string]*string{
+		"ccp": tea.String("ok"),
 	}
-	request.Headers = map[string]string{
-		"x-acs-meta": "user",
+	request.Headers = map[string]*string{
+		"x-acs-meta": tea.String("user"),
 	}
 	str := getStringToSign(request)
 	utils.AssertEqual(t, 28, len(str))
