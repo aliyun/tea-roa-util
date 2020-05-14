@@ -27,7 +27,7 @@ class Client:
         return resource[:-1]
 
     @staticmethod
-    def get_str_to_sign(request):
+    def get_string_to_sign(request):
         method, pathname, headers, query = request.method, request.pathname, request.headers, request.query
 
         accept = '' if headers.get('accept') is None else headers.get('accept')
