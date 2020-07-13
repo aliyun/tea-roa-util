@@ -28,7 +28,8 @@ class TestClient(unittest.TestCase):
         request.pathname = "Pathname"
         request.query = {
             'ccp': 'ok',
-            'test': 'tests'
+            'test': 'tests',
+            'test1': ''
         }
         request.headers = {
             'x-acs-meta': 'user',
@@ -38,7 +39,7 @@ class TestClient(unittest.TestCase):
             'date': 'date'
         }
         str_to_sign = Client.get_string_to_sign(request)
-        s = 'GET\napplication/json\nmd5\napplication/json\ndate\nx-acs-meta:user\n?ccp=ok&test=tests'
+        s = 'GET\napplication/json\nmd5\napplication/json\ndate\nx-acs-meta:user\nPathname?ccp=ok&test=tests&test1'
         self.assertEqual(s, str_to_sign)
 
     def test_get_signature(self):
@@ -47,4 +48,3 @@ class TestClient(unittest.TestCase):
         signature = Client.get_signature(str_to_sign, 'secret')
         self.assertEqual('GET\n\n\n\n\n', str_to_sign)
         self.assertEqual('XGXDWA78AEvx/wmfxKoVCq/afWw=', signature)
-

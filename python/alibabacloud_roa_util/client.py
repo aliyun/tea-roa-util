@@ -20,9 +20,13 @@ class Client:
     def _get_canonicalized_resource(pathname, query):
         if len(query) <= 0:
             return pathname
-        resource = '?'
-        for k, v in query.items():
-            s = '%s=%s&' % (k, v)
+        resource = '%s?' % pathname
+        query_list = sorted(list(query))
+        for key in query_list:
+            if query[key] == '':
+                s = '%s&' % key
+            else:
+                s = '%s=%s&' % (key, query[key])
             resource += s
         return resource[:-1]
 
