@@ -17,3 +17,10 @@ static function getStringToSign(request: $Request): string;
  * @return the signature
  */
 static function getSignature(stringToSign: string, secret: string): string;
+
+/**
+ * Parse filter into a form string
+ * @param filter object
+ * @return the string
+ */
+static function toForm(filter: object): string;

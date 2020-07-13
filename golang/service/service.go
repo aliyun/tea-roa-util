@@ -5,11 +5,16 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/base64"
+	"encoding/json"
+	"fmt"
 	"hash"
 	"io"
+	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 
+	util "github.com/alibabacloud-go/tea-utils/service"
 	"github.com/alibabacloud-go/tea/tea"
 )
 
@@ -61,6 +66,73 @@ func GetSignature(stringToSign *string, secret *string) *string {
 
 func GetStringToSign(request *tea.Request) *string {
 	return tea.String(getStringToSign(request))
+}
+
+func ToForm(filter map[string]interface{}) *string {
+	tmp := make(map[string]interface{})
+	byt, _ := json.Marshal(filter)
+	_ = json.Unmarshal(byt, &tmp)
+
+	result := make(map[string]*string)
+	for key, value := range tmp {
+		filterValue := reflect.ValueOf(value)
+		flatRepeatedList(filterValue, result, key)
+	}
+
+	m := util.AnyifyMapValue(result)
+	return util.ToFormString(m)
+}
+
+func flatRepeatedList(dataValue reflect.Value, result map[string]*string, prefix string) {
+	if !dataValue.IsValid() {
+		return
+	}
+
+	dataType := dataValue.Type()
+	if dataType.Kind().String() == "slice" {
+		handleRepeatedParams(dataValue, result, prefix)
+	} else if dataType.Kind().String() == "map" {
+		handleMap(dataValue, result, prefix)
+	} else {
+		result[prefix] = tea.String(fmt.Sprintf("%v", dataValue.Interface()))
+	}
+}
+
+func handleRepeatedParams(repeatedFieldValue reflect.Value, result map[string]*string, prefix string) {
+	if repeatedFieldValue.IsValid() && !repeatedFieldValue.IsNil() {
+		for m := 0; m < repeatedFieldValue.Len(); m++ {
+			elementValue := repeatedFieldValue.Index(m)
+			key := prefix + "." + strconv.Itoa(m+1)
+			fieldValue := reflect.ValueOf(elementValue.Interface())
+			if fieldValue.Kind().String() == "map" {
+				handleMap(fieldValue, result, key)
+			} else {
+				result[key] = tea.String(fmt.Sprintf("%v", fieldValue.Interface()))
+			}
+		}
+	}
+}
+
+func handleMap(valueField reflect.Value, result map[string]*string, prefix string) {
+	if valueField.IsValid() && valueField.String() != "" {
+		valueFieldType := valueField.Type()
+		if valueFieldType.Kind().String() == "map" {
+			var byt []byte
+			byt, _ = json.Marshal(valueField.Interface())
+			cache := make(map[string]interface{})
+			_ = json.Unmarshal(byt, &cache)
+			for key, value := range cache {
+				pre := ""
+				if prefix != "" {
+					pre = prefix + "." + key
+				} else {
+					pre = key
+				}
+				fieldValue := reflect.ValueOf(value)
+				flatRepeatedList(fieldValue, result, pre)
+			}
+		}
+	}
 }
 
 func getStringToSign(request *tea.Request) string {
