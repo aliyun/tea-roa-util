@@ -1,6 +1,7 @@
 package service
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/alibabacloud-go/tea/tea"
@@ -43,4 +44,45 @@ func Test_getStringToSign(t *testing.T) {
 	}
 	str := getStringToSign(request)
 	utils.AssertEqual(t, 28, len(str))
+}
+
+func Test_ToForm(t *testing.T) {
+	filter := map[string]interface{}{
+		"client": "test",
+		"tag": map[string]*string{
+			"key": tea.String("value"),
+		},
+		"strs": []string{"str1", "str2"},
+	}
+
+	result := ToForm(filter)
+	utils.AssertEqual(t, "client=test&strs.1=str1&strs.2=str2&tag.key=value", tea.StringValue(result))
+}
+
+func Test_flatRepeatedList(t *testing.T) {
+	filter := map[string]interface{}{
+		"client":  "test",
+		"version": "1",
+		"null":    nil,
+		"slice": []interface{}{
+			map[string]interface{}{
+				"map": "valid",
+			},
+			6,
+		},
+		"map": map[string]interface{}{
+			"value": "ok",
+		},
+	}
+
+	result := make(map[string]*string)
+	for key, value := range filter {
+		filterValue := reflect.ValueOf(value)
+		flatRepeatedList(filterValue, result, key)
+	}
+	utils.AssertEqual(t, tea.StringValue(result["slice.1.map"]), "valid")
+	utils.AssertEqual(t, tea.StringValue(result["slice.2"]), "6")
+	utils.AssertEqual(t, tea.StringValue(result["map.value"]), "ok")
+	utils.AssertEqual(t, tea.StringValue(result["client"]), "test")
+	utils.AssertEqual(t, tea.StringValue(result["slice.1.map"]), "valid")
 }
