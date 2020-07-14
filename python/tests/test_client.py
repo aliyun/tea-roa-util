@@ -48,3 +48,15 @@ class TestClient(unittest.TestCase):
         signature = Client.get_signature(str_to_sign, 'secret')
         self.assertEqual('GET\n\n\n\n\n', str_to_sign)
         self.assertEqual('XGXDWA78AEvx/wmfxKoVCq/afWw=', signature)
+
+    def test_to_form(self):
+        filter = {
+            'client': 'test',
+            'client1': None,
+            'strs': ['str1', 'str2'],
+            'tag': {
+                'key': 'value'
+            }
+        }
+        result = Client.to_form(filter)
+        self.assertEqual('client=test&strs.1=str1&strs.2=str2&tag.key=value', result)
