@@ -37,13 +37,14 @@ func Test_Sorter(t *testing.T) {
 func Test_getStringToSign(t *testing.T) {
 	request := tea.NewRequest()
 	request.Query = map[string]*string{
-		"ccp": tea.String("ok"),
+		"roa":  tea.String("ok"),
+		"null": tea.String(""),
 	}
 	request.Headers = map[string]*string{
 		"x-acs-meta": tea.String("user"),
 	}
 	str := getStringToSign(request)
-	utils.AssertEqual(t, 28, len(str))
+	utils.AssertEqual(t, 33, len(str))
 }
 
 func Test_ToForm(t *testing.T) {
