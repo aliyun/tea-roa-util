@@ -59,6 +59,7 @@ public class Client {
         if (keys.length <= 0) {
             return pathname;
         }
+        Arrays.sort(keys);
         StringBuilder result = new StringBuilder(pathname);
         result.append("?");
         String key;

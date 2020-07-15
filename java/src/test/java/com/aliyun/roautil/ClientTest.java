@@ -39,10 +39,16 @@ public class ClientTest {
         request.query = requestMap;
         request.pathname = "/test";
         signature = Client.getStringToSign(request);
-        Assert.assertEquals("GET\naccept\ncontent-md5\ncontent-type\ndate\nx-acs-security-test:test\nx-acs-security-token:test\n" +
-                        "/test?date=date&x-acs-security-token=test&x-acs-security-test=test&content-md5=content-md5&content-type=content-type&accept=accept",
+        Assert.assertEquals("GET\n" +
+                        "accept\n" +
+                        "content-md5\n" +
+                        "content-type\n" +
+                        "date\n" +
+                        "x-acs-security-test:test\n" +
+                        "x-acs-security-token:test\n" +
+                        "/test?accept=accept&content-md5=content-md5&content-type=content-type&date=date&x-acs-security-test=test&x-acs-security-token=test",
                 signature);
-        Assert.assertEquals("SsWK5BHjFUe3pquMl4/gGJYhNzU=", Client.getSignature(signature, "test"));
+        Assert.assertEquals("y7wKfh+lJ/+4fEjbL/KSGSyN8Qw=", Client.getSignature(signature, "test"));
     }
 
     @Test
