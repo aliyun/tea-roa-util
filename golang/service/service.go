@@ -147,7 +147,12 @@ func getStringToSign(request *tea.Request) string {
 	tmp := ""
 	for i := 0; i < len(queryKeys); i++ {
 		queryKey := queryKeys[i]
-		tmp = tmp + "&" + queryKey + "=" + tea.StringValue(queryParams[queryKey])
+		v := tea.StringValue(queryParams[queryKey])
+		if v != "" {
+			tmp = tmp + "&" + queryKey + "=" + v
+		} else {
+			tmp = tmp + "&" + queryKey
+		}
 	}
 	if tmp != "" {
 		tmp = strings.TrimLeft(tmp, "&")
