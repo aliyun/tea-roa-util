@@ -2,9 +2,11 @@
 package com.aliyun.roautil;
 
 import com.aliyun.tea.TeaRequest;
+import com.aliyun.tea.utils.StringUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.net.URLEncoder;
 import java.util.*;
 
 
@@ -85,5 +87,62 @@ public class Client {
         result.putAll(map);
         result.remove(key);
         return result;
+    }
+
+
+    /**
+     * Parse filter into a form string
+     * @param filter object
+     * @return the string
+     */
+    public static String toForm(Map<String, ?> filter) throws Exception{
+        Map<String, String> map = query(filter);
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        for (Map.Entry<String, ?> entry : map.entrySet()) {
+            if (StringUtils.isEmpty(entry.getValue())) {
+                continue;
+            }
+            if (first) {
+                first = false;
+            } else {
+                result.append("&");
+            }
+            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(String.valueOf(entry.getValue()), "UTF-8"));
+        }
+        return result.toString();
+    }
+
+    public static Map<String, String> query(Map<String, ?> map) {
+        Map<String, String> outMap = new HashMap<>();
+        if (null != map) {
+            processeObject(outMap, "", map);
+        }
+        return outMap;
+    }
+
+
+    private static void processeObject(Map<String, String> map, String key, Object value) {
+        if (StringUtils.isEmpty(value)) {
+            return;
+        }
+        if (value instanceof List) {
+            List list = (List) value;
+            for (int i = 0; i < list.size(); i++) {
+                processeObject(map, key + "." + (i + 1), list.get(i));
+            }
+        } else if (value instanceof Map) {
+            Map<String, Object> subMap = (Map<String, Object>) value;
+            for (Map.Entry<String, Object> entry : subMap.entrySet()) {
+                processeObject(map, key + "." + (entry.getKey()), entry.getValue());
+            }
+        } else {
+            if (key.startsWith(".")) {
+                key = key.substring(1);
+            }
+            map.put(key, String.valueOf(value));
+        }
     }
 }

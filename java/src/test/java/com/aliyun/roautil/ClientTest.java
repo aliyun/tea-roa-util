@@ -5,7 +5,9 @@ import com.aliyun.tea.TeaRequest;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -52,5 +54,83 @@ public class ClientTest {
         Assert.assertNull(Client.deleteSpecialKey(null,null));
         Assert.assertNull(result.get("delete"));
         Assert.assertEquals("test", result.get("test"));
+    }
+
+    @Test
+    public void queryTest() throws Exception {
+        Map<String, Object> query = new HashMap<>();
+        query.put("StringTest", "test");
+        query.put("nullTest", null);
+        query.put("IntegerTest", Integer.valueOf(1));
+
+        List<Object> firstList = new ArrayList<>();
+        firstList.add(Integer.valueOf(1));
+        firstList.add(null);
+        Map<String, Object> subMapInFirstList = new HashMap<>();
+        subMapInFirstList.put("nullTest", null);
+        subMapInFirstList.put("IntegerTest", Integer.valueOf(2));
+        subMapInFirstList.put("StringTest", "test");
+        firstList.add(subMapInFirstList);
+        List<Object> secondList = new ArrayList<>();
+        secondList.add(Integer.valueOf(1));
+        secondList.add(null);
+        firstList.add(secondList);
+        query.put("list", firstList);
+
+
+        Map<String, Object> firstMap = new HashMap<>();
+        Map<String, Object> subMapInFirstMap = new HashMap<>();
+        subMapInFirstMap.put("nullTest", null);
+        subMapInFirstMap.put("IntegerTest", Integer.valueOf(2));
+        subMapInFirstMap.put("StringTest", "test");
+        subMapInFirstList.put("nullTest", null);
+        subMapInFirstList.put("IntegerTest", Integer.valueOf(2));
+        subMapInFirstList.put("StringTest", "test");
+        firstMap.put("firstMapMap", subMapInFirstMap);
+        firstMap.put("firstMapList", secondList);
+        firstMap.put("nullTest", null);
+        firstMap.put("IntegerTest", Integer.valueOf(2));
+        firstMap.put("StringTest", "test");
+        query.put("map", firstMap);
+
+        Map<String, String> result = Client.query(null);
+        Assert.assertEquals(0, result.size());
+
+        result = Client.query(query);
+        Assert.assertEquals("test", result.get("StringTest"));
+        Assert.assertNull(result.get("nullTest"));
+        Assert.assertEquals("1", result.get("IntegerTest"));
+
+        Assert.assertEquals("1", result.get("list.1"));
+        Assert.assertNull(result.get("list.2"));
+        Assert.assertEquals("1", result.get("IntegerTest"));
+        Assert.assertEquals("2", result.get("list.3.IntegerTest"));
+        Assert.assertNull(result.get("list.3.nulTest"));
+        Assert.assertEquals("test", result.get("list.3.StringTest"));
+        Assert.assertEquals("1", result.get("list.4.1"));
+
+        Assert.assertEquals("1", result.get("map.firstMapList.1"));
+        Assert.assertNull(result.get("map.nullTest"));
+        Assert.assertEquals("2", result.get("map.IntegerTest"));
+        Assert.assertEquals("test", result.get("map.StringTest"));
+        Assert.assertNull(result.get("map.firstMapMap.nullTest"));
+        Assert.assertEquals("2", result.get("map.firstMapMap.IntegerTest"));
+        Assert.assertEquals("test", result.get("map.firstMapMap.StringTest"));
+    }
+
+    @Test
+    public void toFormStringTest() throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        String result = Client.toForm(null);
+        Assert.assertEquals("", result);
+
+        result = Client.toForm(map);
+        Assert.assertEquals("", result);
+
+        map.put("form", "test");
+        map.put("param", "test");
+        map.put("nullTest", null);
+        result = Client.toForm(map);
+        Assert.assertEquals("form=test&param=test", result);
     }
 }
