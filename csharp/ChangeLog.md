@@ -1,3 +1,7 @@
+### 2020-07-16 Version 0.0.4
+* Supported `ToForm()`
+* screen out emptynull query
+
 ### 2020-04-22 Version 0.0.3
 * Fixed GetSignString
 
