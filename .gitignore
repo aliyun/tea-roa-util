@@ -23,6 +23,7 @@ java/*.iml
 libraries/
 .DS_Store
 coverage.html
+coverage.out
 
 /csharp/**/bin/
 /csharp/**/obj/
