@@ -36,6 +36,7 @@ public class ClientTest {
         requestMap.put("content-type", "content-type");
         requestMap.put("date", "date");
         requestMap.put("emptyTest", "");
+        requestMap.put("spaceTest", "   ");
         request.headers = requestMap;
         request.query = requestMap;
         request.pathname = "/test";
@@ -47,9 +48,10 @@ public class ClientTest {
                         "date\n" +
                         "x-acs-security-test:test\n" +
                         "x-acs-security-token:test\n" +
-                        "/test?accept=accept&content-md5=content-md5&content-type=content-type&date=date&emptyTest&x-acs-security-test=test&x-acs-security-token=test",
+                        "/test?accept=accept&content-md5=content-md5&content-type=content-type&date=date&" +
+                        "emptyTest&spaceTest&x-acs-security-test=test&x-acs-security-token=test",
                 signature);
-        Assert.assertEquals("osUwxrPYOuYWu1I0k/biIeDczGw=", Client.getSignature(signature, "test"));
+        Assert.assertEquals("4dyyuoOuu7iED5+vhBNcmflgq24=", Client.getSignature(signature, "test"));
     }
 
     @Test
