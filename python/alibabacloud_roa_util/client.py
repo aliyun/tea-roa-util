@@ -51,8 +51,8 @@ class Client:
     @staticmethod
     def get_signature(sign, secret):
         hash_val = hmac.new(secret.encode('utf-8'), sign.encode('utf-8'), hashlib.sha1).digest()
-        signature = base64.encodebytes(hash_val).decode('utf-8')
-        return signature.rstrip('\n')
+        signature = base64.b64encode(hash_val).decode('utf-8')
+        return signature
 
     @staticmethod
     def to_form(filter):
