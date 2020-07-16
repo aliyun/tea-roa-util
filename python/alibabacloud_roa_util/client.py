@@ -25,11 +25,12 @@ class Client:
         resource = '%s?' % pathname
         query_list = sorted(list(query))
         for key in query_list:
-            if query[key] == '':
-                s = '%s&' % key
-            else:
-                s = '%s=%s&' % (key, query[key])
-            resource += s
+            if query[key] is not None:
+                if query[key] == '':
+                    s = '%s&' % key
+                else:
+                    s = '%s=%s&' % (key, query[key])
+                resource += s
         return resource[:-1]
 
     @staticmethod
