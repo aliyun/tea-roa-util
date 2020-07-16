@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
 using Tea;
+using Tea.Utils;
 
 namespace AlibabaCloud.ROAUtil
 {
@@ -55,6 +57,27 @@ namespace AlibabaCloud.ROAUtil
             return dictObj;
         }
 
+        public static string ToForm(IDictionary filter)
+        {
+            if(filter == null)
+            {
+                return string.Empty;
+            }
+            Dictionary<string, object> dict = filter.Keys.Cast<string>().ToDictionary(key => key, key => filter[key]);
+            Dictionary<string, string> outDict = new Dictionary<string, string>();
+            TileDict(outDict, dict);
+            List<string> listStr = new List<string>();
+            foreach(var keypair in outDict)
+            {
+                if(string.IsNullOrWhiteSpace(keypair.Value))
+                {
+                    continue;
+                }
+                listStr.Add(PercentEncode(keypair.Key) + "=" + PercentEncode(keypair.Value));
+            }
+            return string.Join("&", listStr);
+        }
+
         internal static string GetCanonicalizedHeaders(Dictionary<String, String> headers)
         {
             String prefix = "x-acs-";
@@ -88,9 +111,72 @@ namespace AlibabaCloud.ROAUtil
             for (int i = 0; i < keys.Count; i++)
             {
                 key = keys[i];
+                if(string.IsNullOrWhiteSpace(query[key]))
+                {
+                    continue;
+                }
                 result.Add(key + "=" + query[key]);
             }
             return pathname + "?" + string.Join("&", result);
+        }
+
+        internal static void TileDict(Dictionary<string, string> dicOut, object obj, string parentKey = "")
+        {
+            if (obj == null)
+            {
+                return;
+            }
+            if (typeof(IDictionary).IsAssignableFrom(obj.GetType()))
+            {
+                Dictionary<string, object> dicIn = ((IDictionary)obj).Keys.Cast<string>().ToDictionary(key => key, key => ((IDictionary)obj)[key]);
+                foreach (var keypair in dicIn)
+                {
+                    string keyName = parentKey + "." + keypair.Key;
+                    if (keypair.Value == null)
+                    {
+                        continue;
+                    }
+                    TileDict(dicOut, keypair.Value, keyName);
+                }
+            }
+            else if (typeof(IList).IsAssignableFrom(obj.GetType()))
+            {
+                int index = 1;
+                foreach (var temp in (IList)obj)
+                {
+                    TileDict(dicOut, temp, parentKey + "." + index.ToSafeString());
+                    index++;
+                }
+            }
+            else
+            {
+                dicOut.Add(parentKey.TrimStart('.'), obj.ToSafeString(""));
+            }
+        }
+
+        internal static string PercentEncode(string value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+            var stringBuilder = new StringBuilder();
+            var text = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
+            var bytes = Encoding.UTF8.GetBytes(value);
+            foreach (char c in bytes)
+            {
+                if (text.IndexOf(c) >= 0)
+                {
+                    stringBuilder.Append(c);
+                }
+                else
+                {
+                    stringBuilder.Append("%").Append(string.Format(CultureInfo.InvariantCulture, "{0:X2}", (int)c));
+                }
+            }
+
+            return stringBuilder.ToString().Replace("+", "%20")
+                .Replace("*", "%2A").Replace("~", "%7E");
         }
     }
 }
