@@ -1,6 +1,53 @@
 // This file is auto-generated, don't edit it
 import * as $tea from '@alicloud/tea-typescript';
+import Util from '@alicloud/tea-util';
 import kitx from 'kitx';
+
+function replaceRepeatList(target: { [key: string]: string }, repeat: any[], prefix: string) {
+  if (prefix) {
+    prefix = prefix + '.';
+  }
+  for (var i = 0; i < repeat.length; i++) {
+    var item = repeat[i];
+    let key = prefix + (i + 1);
+    if (typeof item === 'undefined' || item == null) {
+      target[key] = '';
+      continue;
+    }
+    if (Array.isArray(item)) {
+      replaceRepeatList(target, item, key);
+    } else if (item instanceof Object) {
+      flatMap(target, item, key);
+    } else {
+      target[key] = item.toString();
+    }
+  }
+}
+
+function flatMap(target: { [key: string]: any }, params: { [key: string]: any }, prefix: string = '') {
+  if (prefix) {
+    prefix = prefix + '.';
+  }
+  let keys = Object.keys(params);
+  for (let i = 0; i < keys.length; i++) {
+    let key = keys[i];
+    let value = params[key];
+    key = prefix + key;
+    if (typeof value === 'undefined' || value == null) {
+      target[key] = '';
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      replaceRepeatList(target, value, key);
+    } else if (value instanceof Object) {
+      flatMap(target, value, key);
+    } else {
+      target[key] = value.toString();
+    }
+  }
+  return target;
+}
 
 function filter(value: string): string {
   return value.replace(/[\t\n\r\f]/g, ' ');
@@ -69,4 +116,9 @@ export default class Client {
       return kitx.sha1(utf8Buff, secret, 'base64') as string;
   }
 
+  static toForm(filter: { [key: string]: any }): string {
+    let target = {};
+    flatMap(target, filter);
+    return Util.toFormString(target);
+  }
 }
