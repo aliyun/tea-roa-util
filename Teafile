@@ -1,7 +1,7 @@
 {
 	"scope": "alibabacloud",
 	"name": "ROAUtil",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"main": "./roa_util.tea",
 	"releases": {
 		"ts": "@alicloud/roa-util:^1.0.0",
