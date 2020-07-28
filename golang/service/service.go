@@ -83,6 +83,23 @@ func ToForm(filter map[string]interface{}) *string {
 	return util.ToFormString(m)
 }
 
+func Convert(input, output interface{}) {
+	res := make(map[string]interface{})
+	val := reflect.ValueOf(input).Elem()
+	dataType := val.Type()
+	for i := 0; i < dataType.NumField(); i++ {
+		field := dataType.Field(i)
+		name, _ := field.Tag.Lookup("json")
+		name = strings.Split(name, ",omitempty")[0]
+		_, ok := val.Field(i).Interface().(io.Reader)
+		if !ok {
+			res[name] = val.Field(i).Interface()
+		}
+	}
+	byt, _ := json.Marshal(res)
+	json.Unmarshal(byt, output)
+}
+
 func flatRepeatedList(dataValue reflect.Value, result map[string]*string, prefix string) {
 	if !dataValue.IsValid() {
 		return
