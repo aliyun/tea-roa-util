@@ -1,7 +1,9 @@
 package service
 
 import (
+	"io"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/alibabacloud-go/tea/tea"
@@ -32,6 +34,21 @@ func Test_Sorter(t *testing.T) {
 	sort.Swap(0, 1)
 	isLess = sort.Less(0, 1)
 	utils.AssertEqual(t, isLess, false)
+}
+
+type TestCommon struct {
+	Body io.Reader `json:"Body"`
+	Test string    `json:"Test"`
+}
+
+func Test_Convert(t *testing.T) {
+	in := &TestCommon{
+		Body: strings.NewReader("common"),
+		Test: "ok",
+	}
+	out := new(TestCommon)
+	Convert(in, &out)
+	utils.AssertEqual(t, "ok", out.Test)
 }
 
 func Test_getStringToSign(t *testing.T) {

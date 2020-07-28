@@ -24,3 +24,11 @@ static function getSignature(stringToSign: string, secret: string): string;
  * @return the string
  */
 static function toForm(filter: object): string;
+
+/**
+ * Convert all params of body other than type of readable into content 
+ * @param body source Model
+ * @param content target Model
+ * @return void
+ */
+static function convert(body: $Model, content: $Model): void;
