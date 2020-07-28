@@ -1,3 +1,6 @@
+2020-07-28 Version: v1.1.3
+- Add Convert.
+
 2020-07-15 Version: v1.1.2
 - Fix get StringToSign Error.
 
