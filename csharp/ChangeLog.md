@@ -1,3 +1,6 @@
+### 2020-07-28 Version 1.0.0
+* Supported `Convert()`
+
 ### 2020-07-16 Version 0.0.4
 * Supported `ToForm()`
 * screen out emptynull query

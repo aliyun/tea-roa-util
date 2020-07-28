@@ -1,12 +1,12 @@
 {
 	"scope": "alibabacloud",
 	"name": "ROAUtil",
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"main": "./roa_util.tea",
 	"releases": {
 		"ts": "@alicloud/roa-util:^1.0.0",
 		"go": "github.com/alibabacloud-go/tea-roa-utils/service:v1.1.3",
-		"csharp": "AlibabaCloud.ROAUtil:0.0.4",
+		"csharp": "AlibabaCloud.ROAUtil:1.0.0",
 		"java": "com.aliyun:roa-util:0.0.6",
 		"php": "alibabacloud/tea-roa-utils:^0.1.1",
 		"python": "alibabacloud_roa_util:0.1.1"
