@@ -2,6 +2,7 @@
 
 namespace AlibabaCloud\Tea\RoaUtils\Tests;
 
+use AlibabaCloud\Tea\Model;
 use AlibabaCloud\Tea\Request;
 use AlibabaCloud\Tea\RoaUtils\RoaUtils;
 use PHPUnit\Framework\TestCase;
@@ -66,12 +67,6 @@ class RoaUtilsTest extends TestCase
         $this->assertEquals('/pathname?empty=&foo=bar&number=123', RoaUtils::getCanonicalizedResource($pathname, $query));
     }
 
-    public function testIs4XXor5XX()
-    {
-        $this->assertTrue(RoaUtils::is4XXor5XX(404));
-        $this->assertFalse(RoaUtils::is4XXor5XX(200));
-    }
-
     public function testGetStringToSign()
     {
         $request                    = new Request();
@@ -109,20 +104,39 @@ class RoaUtilsTest extends TestCase
         $this->assertEquals('OmuTAr79tpI6CRoAdmzKRq5lHs0=', RoaUtils::getSignature('stringtosign', 'secret'));
     }
 
-    public function testDeleteSpecialKey()
+    public function testToForm()
     {
-        $source = [
-            'foo'    => 'bar',
-            'delete' => 'for delete',
-        ];
-        $target = [
-            'foo' => 'bar',
-        ];
-        $res    = RoaUtils::deleteSpecialKey($source, 'delete');
-        $this->assertEquals($target, $res);
-        $this->assertEquals([
-            'foo'    => 'bar',
-            'delete' => 'for delete',
-        ], $source);
+        $this->assertEquals('client=test&strs.1=str1&strs.2=str2&tag.key=value', RoaUtils::toForm([
+            'client' => 'test',
+            'tag'    => [
+                'key' => 'value',
+            ],
+            'strs'   => ['str1', 'str2'],
+        ]));
+    }
+
+    public function testConvert()
+    {
+        $model    = new MockModel();
+        $model->a = 'foo';
+
+        $output = new MockModel();
+        RoaUtils::convert($model, $output);
+        $this->assertEquals($model->a, $output->a);
+    }
+}
+
+class MockModel extends Model
+{
+    public $a = 'A';
+
+    public $b = '';
+
+    public $c = '';
+
+    public function __construct()
+    {
+        $this->_name['a']     = 'A';
+        $this->_required['c'] = true;
     }
 }
