@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-
+using Newtonsoft.Json;
 using Tea;
 using Tea.Utils;
 
@@ -43,7 +45,7 @@ namespace AlibabaCloud.ROAUtil
                 algorithm.Key = Encoding.UTF8.GetBytes(secret);
                 signData = algorithm.ComputeHash(Encoding.UTF8.GetBytes(stringToSign.ToCharArray()));
             }
-            return Convert.ToBase64String(signData);
+            return System.Convert.ToBase64String(signData);
         }
 
         public static Dictionary<string, object> DeleteSpecialKey(IDictionary obj, string key)
@@ -76,6 +78,33 @@ namespace AlibabaCloud.ROAUtil
                 listStr.Add(PercentEncode(keypair.Key) + "=" + PercentEncode(keypair.Value));
             }
             return string.Join("&", listStr);
+        }
+
+        public static void Convert(TeaModel input, TeaModel output)
+        {
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            Type type = input.GetType();
+            PropertyInfo[] properties = type.GetProperties();
+            for (int i = 0; i < properties.Length; i++)
+            {
+                PropertyInfo p = properties[i];
+                var propertyType = p.PropertyType;
+                if (!typeof(Stream).IsAssignableFrom(propertyType))
+                {
+                    dict[p.Name] = p.GetValue(input);
+                }
+            }
+
+            string jsonStr = JsonConvert.SerializeObject(dict);
+            TeaModel tempModel = (TeaModel)JsonConvert.DeserializeObject(jsonStr, output.GetType());
+
+            Type outType = output.GetType();
+            PropertyInfo[] outPropertyies = outType.GetProperties();
+            foreach (PropertyInfo p in outPropertyies)
+            {
+                var outPropertyType = p.PropertyType;
+                p.SetValue(output, p.GetValue(tempModel));
+            }
         }
 
         internal static string GetCanonicalizedHeaders(Dictionary<String, String> headers)
