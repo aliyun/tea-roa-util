@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AlibabaCloud.ROAUtil;
 
 using Tea;
-
+using tests.Models;
 using Xunit;
 
 namespace tests
@@ -108,6 +108,31 @@ namespace tests
             string result = Common.ToForm(dicObj);
             Assert.Equal("test=test&key=value&sub.subKey=subValue&sub.subTest=subTest&sub.subListInt.1=1&sub.subListInt.2=2&sub.subListInt.3=3&sub.subListDict.1.a=b&sub.subListDict.1.c=d&sub.subListDict.2.e=f&sub.subListDict.2.g=h&slice.1.a=b&slice.1.c=d&slice.2=5&slice.3.1=list1&slice.3.2=list2", result);
 
+        }
+
+        [Fact]
+        public void Test_Convert()
+        {
+            TestConvertModel model = new TestConvertModel
+            {
+                RequestId = "test",
+                Dict = new Dictionary<string, object>
+                { { "key", "value" },
+                { "testKey", "testValue" }
+                },
+                NoMap = 1,
+                SubModel = new TestConvertModel.TestConvertSubModel
+                {
+                    Id = 2,
+                    RequestId = "subTest"
+                }
+            };
+
+            TestConvertMapModel mapModel = new TestConvertMapModel();
+            Common.Convert(model, mapModel);
+            Assert.Equal("test", mapModel.RequestId);
+            Assert.Equal(0, mapModel.ExtendId);
+            Assert.Equal(2, mapModel.SubModel.Id);
         }
     }
 }
