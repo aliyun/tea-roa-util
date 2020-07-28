@@ -1,7 +1,9 @@
 import hashlib
 import hmac
 import base64
+import copy
 
+from Tea.stream import STREAM_CLASS
 from alibabacloud_tea_util.client import Client as Util
 
 
@@ -62,6 +64,16 @@ class Client:
         return Util.to_form_string(
             Util.anyify_map_value(result)
         )
+
+    @staticmethod
+    def convert(body, content):
+        pros = {}
+        body_map = body.to_map()
+        for k, v in body_map.items():
+            if not isinstance(v, STREAM_CLASS):
+                pros[k] = copy.deepcopy(v)
+
+        content.from_map(pros)
 
     @staticmethod
     def _object_handler(key, value, out):
