@@ -142,4 +142,25 @@ public class ClientTest {
         result = Client.toForm(map);
         Assert.assertEquals("form=test&param=test", result);
     }
+
+    @Test
+    public void convertTest() throws Exception {
+        SourceClass sourceClass = new SourceClass();
+        TargetClass targetClass = new TargetClass();
+        Client.convert(null, targetClass);
+        Assert.assertNull(targetClass.test);
+        Assert.assertNull(targetClass.empty);
+        Assert.assertNull(targetClass.body);
+
+        Client.convert(sourceClass, null);
+        Assert.assertNull(targetClass.test);
+        Assert.assertNull(targetClass.empty);
+        Assert.assertNull(targetClass.body);
+
+        Client.convert(sourceClass, targetClass);
+        Assert.assertEquals("test", targetClass.test);
+        Assert.assertNull(targetClass.empty);
+        Assert.assertNull(targetClass.body);
+    }
+
 }
