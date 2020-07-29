@@ -1,3 +1,7 @@
+### 2020-07-16 Version 0.1.2
+
+* Add convert.
+
 ### 2020-07-16 Version 0.1.1
 
 * Fix signature.
