@@ -94,6 +94,19 @@ function getCanonicalizedResource(uriPattern: string, query: {[key: string]: str
 
 export default class Client {
 
+  static convert(input: $tea.Model, output: $tea.Model): void {
+    if (!output) {
+      return;
+    }
+    let inputModel = Object.assign({}, input);
+    let constructor = <any>output.constructor;
+    for (let key of Object.keys(constructor.names())) {
+      if (inputModel[key]) {
+        output[key] = inputModel[key];
+      }
+    }
+  }
+
   static is4XXor5XX(code: number): boolean {
     return code >= 400 && code < 600;
   }
@@ -117,6 +130,9 @@ export default class Client {
   }
 
   static toForm(filter: { [key: string]: any }): string {
+    if (!filter) {
+      return '';
+    }
     let target = {};
     flatMap(target, filter);
     return Util.toFormString(target);
