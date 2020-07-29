@@ -9,7 +9,7 @@
 		"csharp": "AlibabaCloud.ROAUtil:1.0.0",
 		"java": "com.aliyun:roa-util:0.0.6",
 		"php": "alibabacloud/tea-roa-utils:^0.1.1",
-		"python": "alibabacloud_roa_util:0.1.1"
+		"python": "alibabacloud_roa_util:0.1.2"
 	},
 	"java": {
 		"package": "com.aliyun.roautil"
