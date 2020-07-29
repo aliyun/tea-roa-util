@@ -1,11 +1,15 @@
 // This file is auto-generated, don't edit it. Thanks.
 package com.aliyun.roautil;
 
+import com.aliyun.tea.TeaModel;
 import com.aliyun.tea.TeaRequest;
 import com.aliyun.tea.utils.StringUtils;
+import com.google.gson.Gson;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -148,6 +152,31 @@ public class Client {
                 key = key.substring(1);
             }
             map.put(key, String.valueOf(value));
+        }
+    }
+
+    public static void convert(TeaModel source, TeaModel target) throws IllegalAccessException, InstantiationException {
+        if (source == null || target == null) {
+            return;
+        }
+        Class sourceClass = source.getClass();
+        Class targetClass = target.getClass();
+        Field[] fields = sourceClass.getDeclaredFields();
+        TeaModel teaModel = (TeaModel) sourceClass.newInstance();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            if (InputStream.class.isAssignableFrom(field.getType())) {
+                continue;
+            }
+            field.set(teaModel, field.get(source));
+        }
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(teaModel);
+        Object outPut = gson.fromJson(jsonString, targetClass);
+        fields = outPut.getClass().getFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            field.set(target, field.get(outPut));
         }
     }
 }
