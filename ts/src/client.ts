@@ -92,6 +92,13 @@ function getCanonicalizedResource(uriPattern: string, query: {[key: string]: str
   return `${uriPattern}?${result.join('&')}`;
 }
 
+function isModelClass(t: any): boolean {
+  if (!t) {
+    return false;
+  }
+  return typeof t.types === 'function' && typeof t.names === 'function';
+}
+
 export default class Client {
 
   static convert(input: $tea.Model, output: $tea.Model): void {
@@ -100,8 +107,15 @@ export default class Client {
     }
     let inputModel = Object.assign({}, input);
     let constructor = <any>output.constructor;
+    let types = constructor.types();
+    // let constructor = <any>output.constructor;
     for (let key of Object.keys(constructor.names())) {
       if (inputModel[key]) {
+        if (isModelClass(types[key])) {
+          output[key] = new types[key](output[key]);
+          Client.convert(inputModel[key], output[key]);
+          continue;
+        }
         output[key] = inputModel[key];
       }
     }

@@ -11,17 +11,61 @@ describe('Tea Util', function () {
   });
 
   it('covert should ok', function () {
+    class SubGrant extends $tea.Model {
+      grant: string;
+      other: string;
+      static names(): { [key: string]: string } {
+        return {
+          grant: 'Grant',
+          other: 'Other',
+        };
+      }
+
+      static types(): { [key: string]: any } {
+        return {
+          grant: 'string',
+          other: 'string',
+        };
+      }
+
+      constructor(map: { [key: string]: any }) {
+        super(map);
+      }
+    }
+
+    class SubGrantBak extends $tea.Model {
+      grant: string;
+      diff: string;
+      static names(): { [key: string]: string } {
+        return {
+          grant: 'Grant',
+          diff: 'Diff'
+        };
+      }
+
+      static types(): { [key: string]: any } {
+        return {
+          grant: 'string',
+          diff: 'string',
+        };
+      }
+
+      constructor(map: { [key: string]: any }) {
+        super(map);
+      }
+    }
+
     class Grant extends $tea.Model {
-        grant: string;
+        subGrant: SubGrant;
         static names(): { [key: string]: string } {
           return {
-              grant: 'Grant',
+            subGrant: 'SubGrant',
           };
         }
 
         static types(): { [key: string]: any } {
           return {
-              grant: 'string',
+            subGrant: SubGrant,
           };
         }
 
@@ -31,16 +75,16 @@ describe('Tea Util', function () {
     }
 
     class GrantBak extends $tea.Model {
-      grant: string;
+      subGrant: SubGrantBak;
       static names(): { [key: string]: string } {
         return {
-          grant: 'Grant',
+          subGrant: 'SubGrant',
         };
       }
 
       static types(): { [key: string]: any } {
         return {
-          grant: 'string',
+          subGrant: SubGrantBak,
         };
       }
 
@@ -49,13 +93,20 @@ describe('Tea Util', function () {
       }
     }
     let inputModel: $tea.Model = new Grant({
-      grant: 'test',
+      subGrant: new SubGrant({ grant: 'test', other: 'other'}),
     });
     let outputModel: $tea.Model = new GrantBak({
-      grant: 'out',
+      subGrant: new SubGrantBak({ grant: 'test', diff: 'diff' }),
     });
     Client.convert(inputModel, outputModel);
-    assert.strictEqual(outputModel.grant, 'test');
+    assert.strictEqual(outputModel.subGrant.grant, 'test');
+    assert.strictEqual(outputModel.subGrant.other, undefined);
+    assert.strictEqual(outputModel.subGrant.diff, 'diff');
+    outputModel = new GrantBak({});
+    Client.convert(inputModel, outputModel);
+    assert.strictEqual(outputModel.subGrant.grant, 'test');
+    assert.strictEqual(outputModel.subGrant.other, undefined);
+    assert.strictEqual(outputModel.subGrant.diff, undefined);
   });
 
   it('is4XXor5XX', function () {
