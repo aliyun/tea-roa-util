@@ -1,7 +1,7 @@
 {
-	"scope": "alibabacloud",
+	"scope": "darabonba",
 	"name": "ROAUtil",
-	"version": "0.2.5",
+	"version": "0.1.0",
 	"main": "./roa_util.tea",
 	"releases": {
 		"ts": "@alicloud/roa-util:^1.0.0",
