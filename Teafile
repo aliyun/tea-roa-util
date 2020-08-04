@@ -1,5 +1,5 @@
 {
-	"scope": "darabonba",
+	"scope": "alibabacloud",
 	"name": "ROAUtil",
 	"version": "0.1.0",
 	"main": "./roa_util.tea",
