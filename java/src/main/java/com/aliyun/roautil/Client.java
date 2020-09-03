@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
@@ -85,7 +86,7 @@ public class Client {
         Mac mac = Mac.getInstance("HmacSHA1");
         mac.init(new SecretKeySpec(secret.getBytes("UTF-8"), "HmacSHA1"));
         byte[] signData = mac.doFinal(stringToSign.getBytes("UTF-8"));
-        return Base64.getEncoder().encodeToString(signData);
+        return DatatypeConverter.printBase64Binary(signData);
     }
 
     public static Map<String, Object> deleteSpecialKey(Map<String, ?> map, String key) {
