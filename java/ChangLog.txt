@@ -1,3 +1,6 @@
+2020-09-03 Version: 0.0.8
+1. Change Jdk to 7
+
 2020-07-29 Version: 0.0.7
 1. Add convert method
 

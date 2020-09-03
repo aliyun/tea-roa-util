@@ -13,6 +13,11 @@
     <artifactId>roa-util</artifactId>
     <version>使用maven标签所示版本</version>
 </dependency>
+<dependency>
+    <groupId>com.aliyun</groupId>
+    <artifactId>tea</artifactId>
+    <version>[1.0.5, 2.0.0)</version>
+</dependency>
 ```
 
 ## 问题
