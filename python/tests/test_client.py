@@ -117,7 +117,7 @@ class TestClient(unittest.TestCase):
     def test_convert(self):
         module_path = os.path.dirname(__file__)
         filename = module_path + "/test.txt"
-        with open(filename) as f:
+        with open(filename, 'rb') as f:
             model = TestClient.TestConvertModel()
             model.dic["key"] = "value"
             model.dic["testKey"] = "testValue"
