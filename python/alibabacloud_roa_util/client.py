@@ -3,7 +3,7 @@ import hmac
 import base64
 import copy
 
-from Tea.stream import STREAM_CLASS
+from Tea.stream import READABLE
 from alibabacloud_tea_util.client import Client as Util
 
 
@@ -37,6 +37,11 @@ class Client:
 
     @staticmethod
     def get_string_to_sign(request):
+        """
+        Get the string to be signed according to request
+        @param request  which contains signed messages
+        @return the signed string
+        """
         method, pathname, headers, query = request.method, request.pathname, request.headers, request.query
 
         accept = '' if headers.get('accept') is None else headers.get('accept')
@@ -52,12 +57,23 @@ class Client:
 
     @staticmethod
     def get_signature(sign, secret):
+        """
+        Get signature according to stringToSign, secret
+        @param sign the signed string
+        @param secret accesskey secret
+        @return the signature
+        """
         hash_val = hmac.new(secret.encode('utf-8'), sign.encode('utf-8'), hashlib.sha1).digest()
         signature = base64.b64encode(hash_val).decode('utf-8')
         return signature
 
     @staticmethod
     def to_form(filter):
+        """
+        Parse filter into a form string
+        @param filter object
+        @return the string
+        """
         result = {}
         if filter:
             Client._object_handler('', filter, result)
@@ -67,10 +83,16 @@ class Client:
 
     @staticmethod
     def convert(body, content):
+        """
+        Convert all params of body other than type of readable into content
+        @param body source Model
+        @param content target Model
+        @return void
+        """
         pros = {}
         body_map = body.to_map()
         for k, v in body_map.items():
-            if not isinstance(v, STREAM_CLASS):
+            if not isinstance(v, READABLE):
                 pros[k] = copy.deepcopy(v)
 
         content.from_map(pros)
