@@ -24,5 +24,13 @@
 	"python": {
 		"package": "alibabacloud_roa_util",
 		"clientName": "client"
+	},
+	"cpp": {
+		"packageInfo": {
+			"git": {
+				"scope": "alibabacloud-sdk-cpp",
+				"project": "roautil"
+			}
+		}
 	}
 }
