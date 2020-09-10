@@ -17,11 +17,11 @@ import java.util.*;
 
 public class Client {
 
-    public static boolean is4XXor5XX(Integer code) throws Exception {
+    public static boolean is4XXor5XX(Integer code) {
         return code >= 400 && code < 600;
     }
 
-    public static String getStringToSign(TeaRequest request) throws Exception {
+    public static String getStringToSign(TeaRequest request) {
         String method = request.method;
         String pathname = request.pathname;
         Map<String, String> headers = request.headers;
@@ -82,11 +82,15 @@ public class Client {
         return result.deleteCharAt(result.length() - 1).toString();
     }
 
-    public static String getSignature(String stringToSign, String secret) throws Exception {
-        Mac mac = Mac.getInstance("HmacSHA1");
-        mac.init(new SecretKeySpec(secret.getBytes("UTF-8"), "HmacSHA1"));
-        byte[] signData = mac.doFinal(stringToSign.getBytes("UTF-8"));
-        return DatatypeConverter.printBase64Binary(signData);
+    public static String getSignature(String stringToSign, String secret) {
+        try {
+            Mac mac = Mac.getInstance("HmacSHA1");
+            mac.init(new SecretKeySpec(secret.getBytes("UTF-8"), "HmacSHA1"));
+            byte[] signData = mac.doFinal(stringToSign.getBytes("UTF-8"));
+            return DatatypeConverter.printBase64Binary(signData);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Map<String, Object> deleteSpecialKey(Map<String, ?> map, String key) {
@@ -102,25 +106,30 @@ public class Client {
 
     /**
      * Parse filter into a form string
+     *
      * @param filter object
      * @return the string
      */
-    public static String toForm(Map<String, ?> filter) throws Exception{
+    public static String toForm(Map<String, ?> filter) {
         Map<String, String> map = query(filter);
         StringBuilder result = new StringBuilder();
         boolean first = true;
-        for (Map.Entry<String, ?> entry : map.entrySet()) {
-            if (StringUtils.isEmpty(entry.getValue())) {
-                continue;
+        try {
+            for (Map.Entry<String, ?> entry : map.entrySet()) {
+                if (StringUtils.isEmpty(entry.getValue())) {
+                    continue;
+                }
+                if (first) {
+                    first = false;
+                } else {
+                    result.append("&");
+                }
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(String.valueOf(entry.getValue()), "UTF-8"));
             }
-            if (first) {
-                first = false;
-            } else {
-                result.append("&");
-            }
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(String.valueOf(entry.getValue()), "UTF-8"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return result.toString();
     }
@@ -138,46 +147,59 @@ public class Client {
         if (StringUtils.isEmpty(value)) {
             return;
         }
-        if (value instanceof List) {
-            List list = (List) value;
-            for (int i = 0; i < list.size(); i++) {
-                processeObject(map, key + "." + (i + 1), list.get(i));
+        try {
+            if (value instanceof List) {
+                List list = (List) value;
+                for (int i = 0; i < list.size(); i++) {
+                    processeObject(map, key + "." + (i + 1), list.get(i));
+                }
+            } else if (value instanceof Map) {
+                Map<String, Object> subMap = (Map<String, Object>) value;
+                for (Map.Entry<String, Object> entry : subMap.entrySet()) {
+                    processeObject(map, key + "." + (entry.getKey()), entry.getValue());
+                }
+            } else {
+                if (key.startsWith(".")) {
+                    key = key.substring(1);
+                }
+                if (value instanceof byte[]) {
+                    map.put(key, new String((byte[]) value, "UTF-8"));
+                } else {
+                    map.put(key, String.valueOf(value));
+
+                }
             }
-        } else if (value instanceof Map) {
-            Map<String, Object> subMap = (Map<String, Object>) value;
-            for (Map.Entry<String, Object> entry : subMap.entrySet()) {
-                processeObject(map, key + "." + (entry.getKey()), entry.getValue());
-            }
-        } else {
-            if (key.startsWith(".")) {
-                key = key.substring(1);
-            }
-            map.put(key, String.valueOf(value));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public static void convert(TeaModel source, TeaModel target) throws IllegalAccessException, InstantiationException {
+    public static void convert(TeaModel source, TeaModel target) {
         if (source == null || target == null) {
             return;
         }
-        Class sourceClass = source.getClass();
-        Class targetClass = target.getClass();
-        Field[] fields = sourceClass.getDeclaredFields();
-        TeaModel teaModel = (TeaModel) sourceClass.newInstance();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            if (InputStream.class.isAssignableFrom(field.getType())) {
-                continue;
+        try {
+            Class sourceClass = source.getClass();
+            Class targetClass = target.getClass();
+            Field[] fields = sourceClass.getDeclaredFields();
+            TeaModel teaModel = (TeaModel) sourceClass.newInstance();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (InputStream.class.isAssignableFrom(field.getType())) {
+                    continue;
+                }
+                field.set(teaModel, field.get(source));
             }
-            field.set(teaModel, field.get(source));
-        }
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(teaModel);
-        Object outPut = gson.fromJson(jsonString, targetClass);
-        fields = outPut.getClass().getFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            field.set(target, field.get(outPut));
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(teaModel);
+            Object outPut = gson.fromJson(jsonString, targetClass);
+            fields = outPut.getClass().getFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                field.set(target, field.get(outPut));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
