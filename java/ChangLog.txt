@@ -1,3 +1,6 @@
+2020-09-10 Version: 0.0.9
+1. Change checked exception to unchecked exception
+
 2020-09-03 Version: 0.0.8
 1. Change Jdk to 7
 

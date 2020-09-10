@@ -4,7 +4,7 @@
 
     <groupId>com.aliyun</groupId>
     <artifactId>roa-util</artifactId>
-    <version>0.0.8</version>
+    <version>0.0.9</version>
     <packaging>jar</packaging>
 
     <name>roa-util</name>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>tea</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <optional>true</optional>
         </dependency>
         <dependency>
