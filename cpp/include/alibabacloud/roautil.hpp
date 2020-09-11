@@ -18,7 +18,7 @@ public:
   static string getStringToSign(const Request &request);
   static string getSignature(const string &stringToSign, const string &secret);
   static string toForm(map<string, boost::any> filter);
-  static void convert(Model body, Model content);
+  static void convert(Model& body, Model& content);
 };
 } // namespace Alibabacloud_ROAUtil
 

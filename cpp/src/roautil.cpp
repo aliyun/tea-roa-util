@@ -46,7 +46,7 @@ bool end_with(std::string const &fullString, std::string const &ending) {
 }
 
 bool start_with(std::string const &fullString, std::string const &ending) {
-  return fullString.rfind("ending", 0) == 0;
+  return fullString.rfind(ending, 0) == 0;
 }
 
 void replace_all(std::string &str, const std::string &from,
@@ -89,7 +89,12 @@ string get_canonicalized_resource(string pathname,
   vector<string> tmp;
   for (auto it : query) {
     string str;
-    tmp.push_back(str.append(it.first).append("=").append(it.second));
+    if (it.second.empty()) {
+      tmp.push_back(it.first);
+    } else {
+      tmp.push_back(str.append(it.first).append("=").append(it.second));
+    }
+
   }
   string res;
   return res.append(pathname).append("?").append(implode(tmp, "&"));
@@ -105,7 +110,7 @@ string Alibabacloud_ROAUtil::Client::getStringToSign(const Request &request) {
 
   string result = implode(vector<string>{uppercase(request.method), accept,
                                          content_md5, content_type, date},
-                          "\n");
+                          "\n").append("\n");
 
   string canonicalized_headers = get_canonicalized_headers(request.headers);
   string canonicalized_resource = get_canonicalized_resource(pathname, query);
@@ -207,7 +212,7 @@ string Alibabacloud_ROAUtil::Client::toForm(map<string, boost::any> filter) {
   return implode(v, "&");
 }
 
-void Alibabacloud_ROAUtil::Client::convert(Model body, Model content) {
+void Alibabacloud_ROAUtil::Client::convert(Model& body, Model& content) {
   map<std::string, boost::any> properties = body.toMap();
   for (const auto &it : properties) {
     content.set(it.first, it.second);
