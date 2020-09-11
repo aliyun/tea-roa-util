@@ -49,12 +49,17 @@ TEST(tests, getStringToSign)
 
 TEST(tests, toForm)
 {
+  vector<boost::any> lis = {"str1", "str2"};
+  map<string, boost::any> d = {
+      {"key", "value"}
+  };
   const map<string, boost::any> m = {
-      {"str_test", "test"},
-      {"int_test", 1}
+      {"client", "test"},
+      {"strs", lis},
+      {"tag", d}
   };
   string result = Alibabacloud_ROAUtil::Client::toForm(m);
-  ASSERT_EQ("int_test=1&int_test.str_test=test", result);
+  ASSERT_EQ("client=test&strs.1=str1&strs.2=str2&tag.key=value", result);
 }
 
 TEST(tests, convert)

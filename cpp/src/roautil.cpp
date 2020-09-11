@@ -129,9 +129,9 @@ void flatten(map<string, boost::any> &res, std::string prefix,
     for (const auto &it : m) {
       std::string p;
       if (prefix.empty()) {
-        p = prefix.append(it.first);
+        p = prefix + it.first;
       } else {
-        p = prefix.append(".").append(it.first);
+        p = prefix + "." + it.first;
       }
       flatten(res, p, it.second);
     }
@@ -141,12 +141,13 @@ void flatten(map<string, boost::any> &res, std::string prefix,
     for (const auto &it : v) {
       std::string p;
       if (prefix.empty()) {
-        p = prefix.append(to_string(n));
+        p = prefix + to_string(n+1);
       } else {
-        p = prefix.append(".").append(to_string(n));
+        p = prefix + "." + to_string(n+1);
       }
       flatten(res, p, it);
       n++;
+
     }
   } else {
     res.insert(pair<string, boost::any>(prefix, curr));
