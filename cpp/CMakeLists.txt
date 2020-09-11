@@ -70,7 +70,8 @@ if (ENABLE_UNIT_TESTS)
             ${PROJECT_NAME}
             OpenSSL::SSL
             gtest_main
-            gmock_main)
+            gmock_main
+            darabonba_core)
     add_test(NAME google_test
             COMMAND $<TARGET_FILE:tests>)
 endif ()
