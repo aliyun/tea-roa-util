@@ -4,6 +4,7 @@
 #include <boost/any.hpp>
 #include <boost/functional/hash.hpp>
 #include <darabonba/core.hpp>
+#include <cpprest/streams.h>
 #include <iostream>
 #include <map>
 
@@ -16,6 +17,7 @@ string find_header(map<string, string> headers, const string &header_name) {
   }
   return string("");
 }
+
 std::string implode(const std::vector<std::string> &vec,
                     const std::string &glue) {
   string res;
@@ -100,26 +102,26 @@ string get_canonicalized_resource(string pathname,
   return res.append(pathname).append("?").append(implode(tmp, "&"));
 }
 
-string Alibabacloud_ROAUtil::Client::getStringToSign(const Request &request) {
-  string pathname = request.pathname;
-  map<string, string> query = request.query;
-  string accept = find_header(request.headers, "accept");
-  string content_md5 = find_header(request.headers, "content-md5");
-  string content_type = find_header(request.headers, "content-type");
-  string date = find_header(request.headers, "date");
+string Alibabacloud_ROAUtil::Client::getStringToSign(Request *request) {
+  string pathname = request->pathname;
+  map<string, string> query = request->query;
+  string accept = find_header(request->headers, "accept");
+  string content_md5 = find_header(request->headers, "content-md5");
+  string content_type = find_header(request->headers, "content-type");
+  string date = find_header(request->headers, "date");
 
-  string result = implode(vector<string>{uppercase(request.method), accept,
+  string result = implode(vector<string>{uppercase(request->method), accept,
                                          content_md5, content_type, date},
                           "\n").append("\n");
 
-  string canonicalized_headers = get_canonicalized_headers(request.headers);
+  string canonicalized_headers = get_canonicalized_headers(request->headers);
   string canonicalized_resource = get_canonicalized_resource(pathname, query);
   return result.append(canonicalized_headers).append(canonicalized_resource);
 }
 
-string Alibabacloud_ROAUtil::Client::getSignature(const string &stringToSign,
-                                                  const string &secret) {
-  return hmacSha1(stringToSign, secret);
+string Alibabacloud_ROAUtil::Client::getSignature(string *stringToSign,
+                                                  string *secret) {
+  return hmacSha1(*stringToSign, *secret);
 }
 
 void flatten(map<string, boost::any> &res, std::string prefix,
@@ -172,10 +174,10 @@ string url_encode(const std::string &str) {
   return escaped.str();
 }
 
-string Alibabacloud_ROAUtil::Client::toForm(map<string, boost::any> filter) {
+string Alibabacloud_ROAUtil::Client::toForm(map<string, boost::any> *filter) {
   map<string, string> query;
   map<string, boost::any> flat;
-  flatten(flat, string(""), boost::any(filter));
+  flatten(flat, string(""), boost::any(*filter));
   for (const auto &it : flat) {
     boost::any val = it.second;
     if (typeid(string) == val.type()) {
@@ -213,9 +215,11 @@ string Alibabacloud_ROAUtil::Client::toForm(map<string, boost::any> filter) {
   return implode(v, "&");
 }
 
-void Alibabacloud_ROAUtil::Client::convert(Model& body, Model& content) {
-  map<std::string, boost::any> properties = body.toMap();
+void Alibabacloud_ROAUtil::Client::convert(Model *body, Model *content) {
+  map<string, boost::any> props;
+  map<std::string, boost::any> properties = body->toMap();
   for (const auto &it : properties) {
-    content.set(it.first, it.second);
+    props[it.first] = it.second;
   }
+  content->fromMap(props);
 }
