@@ -15,10 +15,11 @@ public:
   Client();
   ~Client();
 
-  static string getStringToSign(Request *request);
-  static string getSignature(string *stringToSign, string *secret);
-  static string toForm(map<string, boost::any> *filter);
-  static void convert(Model *body, Model *content);
+  static string getStringToSign(shared_ptr<Request> request);
+  static string getSignature(shared_ptr<string> stringToSign,
+                             shared_ptr<string> secret);
+  static string toForm(shared_ptr<map<string, boost::any>> filter);
+  static void convert(shared_ptr<Model> body, shared_ptr<Model> content);
 };
 } // namespace Alibabacloud_ROAUtil
 
