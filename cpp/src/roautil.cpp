@@ -2,9 +2,8 @@
 #include <alibabacloud/roautil.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/any.hpp>
-#include <boost/functional/hash.hpp>
-#include <darabonba/core.hpp>
 #include <cpprest/streams.h>
+#include <darabonba/core.hpp>
 #include <iostream>
 #include <map>
 
@@ -96,13 +95,13 @@ string get_canonicalized_resource(string pathname,
     } else {
       tmp.push_back(str.append(it.first).append("=").append(it.second));
     }
-
   }
   string res;
   return res.append(pathname).append("?").append(implode(tmp, "&"));
 }
 
-string Alibabacloud_ROAUtil::Client::getStringToSign(Request *request) {
+string
+Alibabacloud_ROAUtil::Client::getStringToSign(shared_ptr<Request> request) {
   string pathname = request->pathname;
   map<string, string> query = request->query;
   string accept = find_header(request->headers, "accept");
@@ -112,15 +111,17 @@ string Alibabacloud_ROAUtil::Client::getStringToSign(Request *request) {
 
   string result = implode(vector<string>{uppercase(request->method), accept,
                                          content_md5, content_type, date},
-                          "\n").append("\n");
+                          "\n")
+                      .append("\n");
 
   string canonicalized_headers = get_canonicalized_headers(request->headers);
   string canonicalized_resource = get_canonicalized_resource(pathname, query);
   return result.append(canonicalized_headers).append(canonicalized_resource);
 }
 
-string Alibabacloud_ROAUtil::Client::getSignature(string *stringToSign,
-                                                  string *secret) {
+string
+Alibabacloud_ROAUtil::Client::getSignature(shared_ptr<string> stringToSign,
+                                           shared_ptr<string> secret) {
   return hmacSha1(*stringToSign, *secret);
 }
 
@@ -143,13 +144,12 @@ void flatten(map<string, boost::any> &res, std::string prefix,
     for (const auto &it : v) {
       std::string p;
       if (prefix.empty()) {
-        p = prefix + to_string(n+1);
+        p = prefix + to_string(n + 1);
       } else {
-        p = prefix + "." + to_string(n+1);
+        p = prefix + "." + to_string(n + 1);
       }
       flatten(res, p, it);
       n++;
-
     }
   } else {
     res.insert(pair<string, boost::any>(prefix, curr));
@@ -174,7 +174,8 @@ string url_encode(const std::string &str) {
   return escaped.str();
 }
 
-string Alibabacloud_ROAUtil::Client::toForm(map<string, boost::any> *filter) {
+string Alibabacloud_ROAUtil::Client::toForm(
+    shared_ptr<map<string, boost::any>> filter) {
   map<string, string> query;
   map<string, boost::any> flat;
   flatten(flat, string(""), boost::any(*filter));
@@ -215,7 +216,8 @@ string Alibabacloud_ROAUtil::Client::toForm(map<string, boost::any> *filter) {
   return implode(v, "&");
 }
 
-void Alibabacloud_ROAUtil::Client::convert(Model *body, Model *content) {
+void Alibabacloud_ROAUtil::Client::convert(shared_ptr<Model> body,
+                                           shared_ptr<Model> content) {
   map<string, boost::any> props;
   map<std::string, boost::any> properties = body->toMap();
   for (const auto &it : properties) {
