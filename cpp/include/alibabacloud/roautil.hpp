@@ -1,3 +1,5 @@
+// This file is auto-generated, don't edit it. Thanks.
+
 #ifndef ALIBABACLOUD_ROAUTIL_H_
 #define ALIBABACLOUD_ROAUTIL_H_
 
@@ -6,20 +8,18 @@
 #include <iostream>
 #include <map>
 
-using namespace Darabonba;
 using namespace std;
 
 namespace Alibabacloud_ROAUtil {
-class Client : public Model {
+class Client {
 public:
-  Client();
-  ~Client();
-
-  static string getStringToSign(shared_ptr<Request> request);
-  static string getSignature(shared_ptr<string> stringToSign,
-                             shared_ptr<string> secret);
+  static string getStringToSign(shared_ptr<Darabonba::Request> request);
+  static string getSignature(shared_ptr<string> stringToSign, shared_ptr<string> secret);
   static string toForm(shared_ptr<map<string, boost::any>> filter);
-  static void convert(shared_ptr<Model> body, shared_ptr<Model> content);
+  static void convert(shared_ptr<Darabonba::Model> body, shared_ptr<Darabonba::Model> content);
+
+  Client() {};
+  ~Client() {};
 };
 } // namespace Alibabacloud_ROAUtil
 
