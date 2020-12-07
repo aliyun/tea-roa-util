@@ -114,3 +114,7 @@ class Client:
             if key.startswith('.'):
                 key = key[1:]
             out[key] = str(value)
+
+
+class AioClient(Client):
+    pass
