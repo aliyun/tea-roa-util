@@ -1,7 +1,7 @@
 {
 	"scope": "alibabacloud",
 	"name": "ROAUtil",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"main": "./roa_util.tea",
 	"releases": {
 		"ts": "@alicloud/roa-util:^1.0.0",
@@ -9,7 +9,8 @@
 		"csharp": "AlibabaCloud.ROAUtil:1.0.0",
 		"java": "com.aliyun:roa-util:0.0.9",
 		"php": "alibabacloud/tea-roa-utils:^0.1.1",
-		"python": "alibabacloud_roa_util:0.1.2"
+		"python": "alibabacloud_roa_util:0.1.2",
+		"python2": "alibabacloud_roa_util_py2:0.0.1"
 	},
 	"java": {
 		"package": "com.aliyun.roautil"
@@ -22,6 +23,10 @@
 		"clientName": "RoaUtils"
 	},
 	"python": {
+		"package": "alibabacloud_roa_util",
+		"clientName": "client"
+	},
+	"python2": {
 		"package": "alibabacloud_roa_util",
 		"clientName": "client"
 	},
